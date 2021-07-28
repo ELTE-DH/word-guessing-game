@@ -1,0 +1,8 @@
+sqlalchemy
+flask
+flask_sqlalchemy
+werkzeug
+jinja2
+gunicorn
+pyyaml
+yamale

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <title>{{ui_strings.title}}</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        {% with messages = get_flashed_messages() -%}
+        <div style="width: 100%; text-align: center; margin-left: auto; margin-right: auto;">
+            <ul>
+            {%- if messages -%}
+            {%- for message in messages %}
+                <li style="text-align: center; display: block;">{{ message }}</li>
+            {%- endfor %}
+            {% else %}
+                <li style="text-align: center; display: block;">&nbsp;</li>
+            {% endif -%}
+            </ul>
+        </div>
+        <br>
+        {% endwith -%}
+        <form action="" method="get">
+            <div style="overflow:hidden; width: 100%; display:table;">
+                <div style="text-align: left; display:table-cell; width: 15%;">
+                {% if previous_guesses|length > 0 -%}
+                    {{ ui_strings.previous_guesses }}:
+                    {%- for word in previous_guesses %}
+                    <input type="hidden" name="previous_guesses[]" value="{{ word }}">
+                    {%- endfor %}
+                    <ul>
+                        {%- for word in previous_guesses %}
+                        <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }}</li>
+                        {%- endfor %}
+                    </ul>
+                {% endif -%}
+                </div>
+                <div style="text-align: center; overflow: hidden; display:table-cell; width: 60%;">
+                    <label for="guessed_word">Tipp: </label><input type="text" name="guessed_word" id="guessed_word">
+                    <input type="submit" name="guess" value="{{ ui_strings.guess }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
+                    <input type="submit" name="next_sent" value="{{ ui_strings.next_sent }}" {% if not buttons_enabled.next_sent %}disabled{%endif%}>
+                    <br><br>
+                    <input type="submit" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
+                    <input type="submit" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
+                    <br><br>
+                    {%- for sent_id, pre, word, post in displayed_sents %}
+                    <input type="hidden" name="displayed_sents[]" value="{{ sent_id }}">
+                    {%- endfor %}
+                    <table style="border-collapse: collapse; border-spacing: 0; margin-left: auto; margin-right: auto;">
+                        <tbody>
+                            {%- for sent_id, pre, word, post in displayed_sents %}
+                            <tr>
+                                <td style="border-width:0px; text-align: right;">...{{ pre }}</td>
+                                <td style="border-width:0px; text-align: center;"> <strong>{{ word }}</strong> </td>
+                                <td style="border-width:0px; text-align: left;">{{ post }}...</td>
+                            </tr>
+                            {%- endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align: center; display:table-cell; width: 15%;"></div>
+            </div>
+        </form>
+        <div style="width: 100%;">
+           <hr>
+            {{ ui_strings.footer|safe }}
+        </div>
+    </body>
+</html>
