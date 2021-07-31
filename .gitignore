@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDEs
+.idea
+.vscode
+
+# Repo specific stuff
+create_database/PrevCons.sqlite3
+create_database/orig/
+create_database/*.txt.gz

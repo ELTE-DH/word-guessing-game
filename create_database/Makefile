@@ -53,8 +53,24 @@ venv:
 sample: ./venv/bin/pip sampled_concs.txt.gz
 	# Sample from the ballanced dataset for portability
 	export LC_ALL="C.UTF-8" && rm -rf webcorpus_conc.db  && pigz -cd sampled_concs.txt.gz | \
-	 python3 random_sampling_filter.py | ./venv/bin/python3 create_sqldb.py
+	 python3 random_sampling_filter.py | ./venv/bin/python3 create_sqldb.py -f webcorpus_conc.db
 	# Words (to be guessed): 8 000
 	# Concordances: 240 000
 	# about a few minutes
 	# DB size: about 30 MB
+
+PrevCons.sqlite3:
+	wget https://github.com/kagnes/prevcons/raw/master/PrevCons.sqlite3
+
+prevcons: PrevCons.sqlite3 venv
+	# Requires the database file (PrevCons.sqlite3) and the virtualenv (venv) to be created
+	./venv/bin/python3 filter_prevcons.py | sort --parallel=$$(nproc) -T ~/tmp -S10% --compress-program=pigz | \
+	 ./uniq_2nd_field.sh | ./uniq_3rd_field.sh | ./venv/bin/python3 create_sqldb.py -f prevcons_conc.db
+	echo 'Database succesfully created! (The errors above were not fatal.)'
+	# Words (to be guessed): 122
+	# Concordances: 15 816
+	# less than a minute
+	# DB size: 1,4 MB
+
+clean:
+	rm -rf orig *.txt.gz *.db PrevCons.sqlite3
