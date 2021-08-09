@@ -17,4 +17,11 @@ ui-strings:
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
     no_more_sent_for_word: Nincs több mondat! :(
-    footer: Találd ki a szót minél kevesebb mondatból! Az X karakterek ugyanazt a szót rejtik más-más modatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)
+    footer: Találd ki a szót minél kevesebb mondatból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)
+            <br><br>
+            Adatbázis:\ Nekeskey Dávid Márk – <a href="https://hlt.bme.hu/hu/resources/webcorpus2">Magyar Webkorpusz 2.0</a><br>
+            <br>
+            <p>A Magyar Webkorpusz 2.0 felhasználása esetén az alábbi publikáció hivatkozandó:</p>
+            <ul>
+                <li><a href="https://hlt.bme.hu/media/pdf/nemeskey_thesis.pdf">Nemeskey, Dávid Márk (2020). “Natural Language Processing methods for Language Modeling”. PhD thesis. Eötvös Loránd University.</a></li>
+            </ul>

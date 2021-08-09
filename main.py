@@ -47,6 +47,7 @@ def create_app(config_filename='config.yaml'):
 
     # Read configuration
     config = load_and_validate_config(config_filename)
+    config['ui-strings']['footer'] = config['ui-strings']['footer'].replace(r':\ ', ': ')
 
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
