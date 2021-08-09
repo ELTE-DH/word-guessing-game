@@ -17,7 +17,7 @@ ui-strings:
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
     no_more_sent_for_word: Nincs több mondat! :(
-    footer: Találd ki az igekötőt minél kevesebb mondatból! Az X karakterek ugyanazt az igekötőt rejtik más-más modatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó igekötő karaktereinek számával.)
+    footer: Találd ki az igekötőt minél kevesebb mondatból! Az X karakterek ugyanazt az igekötőt rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó igekötő karaktereinek számával.)
             <br><br>
             Adatbázis:\ Kalivoda Ágnes – <a href="https://github.com/kagnes/prevcons">PrevCons</a><br>
             <br>
