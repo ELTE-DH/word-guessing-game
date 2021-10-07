@@ -4,14 +4,12 @@
 import sys
 from collections import Counter
 from sqlalchemy import create_engine, Table, inspect
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 db = create_engine('sqlite:///PrevCons.sqlite3')
-base = declarative_base(bind=db.engine)
-inspector = inspect(db.engine)
 
-table_objs = {table_name: Table(table_name, base.metadata, autoload=True) for table_name in inspector.get_table_names()}
+table_objs = {table_name: Table(table_name, declarative_base().metadata, autoload_with=db)
+              for table_name in inspect(db.engine).get_table_names()}
 table_column_objs = {(table_name, col_obj.key): col_obj for table_name, table_obj in table_objs.items()
                      for col_obj in table_obj.columns}
 

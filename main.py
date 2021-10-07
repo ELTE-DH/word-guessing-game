@@ -3,18 +3,16 @@
 
 import os
 import sys
-from random import shuffle, randrange
 
-from sqlalchemy import func, Table
-from flask_sqlalchemy import SQLAlchemy, declarative_base
+
+from flask_sqlalchemy import SQLAlchemy
 from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, Flask, render_template, current_app
 
-db = SQLAlchemy()
+from context_bank import ContextBank
 
 
-def load_and_validate_config(config_filename=os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                                          'config.yaml'),
+def load_and_validate_config(config_filename=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.yaml'),
                              config_schema_filename=os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                                                  'config_schema.yaml')):
     """Load YAML config and validate it with the given schema"""
@@ -61,15 +59,10 @@ def create_app(config_filename='config.yaml'):
     app_settings = flask_app.config['APP_SETTINGS']
 
     # Setup SQLAlchemy database for pythonic usage (column obj to name mapping)
+    db = SQLAlchemy()
     db.init_app(flask_app)
     with flask_app.app_context():
-        db_config = config['db-config']
-        app_settings['table_obj'] = Table(db_config['table_name'], declarative_base().metadata, autoload_with=db.engine)
-        col_objs = {col_obj.key: col_obj for col_obj in app_settings['table_obj'].columns}
-        app_settings['id_obj'] = col_objs[db_config['id_name']]
-        app_settings['left_obj'] = col_objs[db_config['left_name']]
-        app_settings['word_obj'] = col_objs[db_config['word_name']]
-        app_settings['right_obj'] = col_objs[db_config['right_name']]
+        app_settings['context_bank'] = ContextBank(config['db-config'], db)
 
     @flask_app.route('/')  # So one can create permalink for states!
     # @auth.login_required
@@ -78,11 +71,12 @@ def create_app(config_filename='config.yaml'):
 
         settings = current_app.config['APP_SETTINGS']
         # Parse parameters and put errors into messages if necessary
-        messages, next_action, displayed_sent_ids, guessed_word, previous_guesses = parse_params(settings)
+        messages, next_action, displayed_sent_ids, guessed_word, previous_guesses = parse_params(settings['ui-strings'])
 
         # Execute one step in the game if there were no errors, else do nothing
         messages, displayed_sents, buttons_enabled = \
-            game_logic(messages, next_action, displayed_sent_ids, guessed_word, previous_guesses, settings)
+            game_logic(messages, next_action, displayed_sent_ids, guessed_word, previous_guesses,
+                       settings['ui-strings'], settings['context_bank'])
 
         # Display messages (errors and informational ones)
         for m in messages:
@@ -96,7 +90,7 @@ def create_app(config_filename='config.yaml'):
     return flask_app
 
 
-def parse_params(settings):
+def parse_params(ui_strings):
     """Parse input parameters (Flask-specific)"""
     messages = []
 
@@ -104,12 +98,12 @@ def parse_params(settings):
 
     guessed_word = request.args.get('guessed_word')
     if 'guess' in request.args and guessed_word is None:
-        messages.append(settings['ui-strings']['no_guessed_word_specified'])
+        messages.append(ui_strings['no_guessed_word_specified'])
 
     displayed_sent_ids = request.args.getlist('displayed_sents[]', int)
 
     if len({'guess', 'give_up', 'next_sent'}.intersection(request.args.keys())) > 0 and len(displayed_sent_ids) == 0:
-        messages.append(settings['ui-strings']['no_displayed_sentences_specified'])
+        messages.append(ui_strings['no_displayed_sentences_specified'])
 
     for action in ('guess', 'next_sent', 'give_up', 'new_game'):
         if action in request.args:
@@ -119,12 +113,12 @@ def parse_params(settings):
         next_action = None
 
     if len(request.args) > 0 and next_action is None:
-        messages.append(settings['ui-strings']['no_action_specified'])
+        messages.append(ui_strings['no_action_specified'])
 
     return messages, next_action, displayed_sent_ids, guessed_word, previous_guesses
 
 
-def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses, settings):
+def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses, ui_strings, context_bank):
     """The main logic of the game"""
 
     buttons_enabled = {'guess': True, 'next_sent': True, 'give_up': True, 'new_game': True}
@@ -135,111 +129,39 @@ def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses
         buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
     elif action == 'guess':
         # Get the word for ID and check it. If matches reveal word in displayed sentences
-        word = identify_word_from_id(displayed_sents, settings)
+        word = context_bank.identify_word_from_id(displayed_sents)
         if word == guessed_word:
             hide_word = False
-            messages.append(settings['ui-strings']['win'])
+            messages.append(ui_strings['win'])
             buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
         else:
             hide_word = True
-            messages.append(settings['ui-strings']['incorrect_guess'])
+            messages.append(ui_strings['incorrect_guess'])
             previous_guesses.append(guessed_word)
 
-        sents_to_display, _ = read_all_sentences_for_word(displayed_sents, settings, hide_word)
+        sents_to_display, _ = context_bank.read_all_sentences_for_word(displayed_sents, hide_word=hide_word)
     elif action == 'next_sent':
         # Read sentences for the word, display already shown and select a new one
-        sents_to_display, new_sents = read_all_sentences_for_word(displayed_sents, settings, hide_word=True)
+        sents_to_display, new_sents = context_bank.read_all_sentences_for_word(displayed_sents, hide_word=True)
 
         # Select a new sentence to display and insert it to the top
         if len(new_sents) > 0:
             sents_to_display.insert(0, new_sents[0])
         else:
             buttons_enabled['next_sent'] = False
-            messages.append(settings['ui-strings']['no_more_sent_for_word'])
+            messages.append(ui_strings['no_more_sent_for_word'])
     elif action == 'give_up':
         # Reveal word in already displayed sentences
         buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
-        sents_to_display, _ = read_all_sentences_for_word(displayed_sents, settings, hide_word=False)
+        sents_to_display, _ = context_bank.read_all_sentences_for_word(displayed_sents, hide_word=False)
     elif action == 'new_game':
         # Select a random sentence
         previous_guesses.clear()
-        sents_to_display = select_one_random_sentence(settings)
+        sents_to_display = context_bank.select_one_random_sentence()
     else:
         raise NotImplementedError('Nonsense state!')
 
     return messages, sents_to_display, buttons_enabled
-
-
-def select_one_random_sentence(settings):
-    """Select one random sentence from all available sentences
-        Raises sqlalchemy.orm.exc.NoResultFound if the query selects no rows
-        Raises sqlalchemy.orm.exc.MultipleResultsFound if multiple rows are returned
-    """
-
-    row_count_query = db.session.query(func.count(settings['id_obj']))
-    row_count = row_count_query.scalar()
-
-    random_sent_id = randrange(row_count) + 1
-
-    entry_query = db.session.query(settings['table_obj']). \
-        with_entities(settings['id_obj'], settings['left_obj'], settings['word_obj'], settings['right_obj']). \
-        filter(settings['id_obj'] == random_sent_id)
-    sent_id, left, word, right = entry_query.one()
-
-    return [[sent_id, left, hide(word), right]]
-
-
-def read_all_sentences_for_word(displayed_sents, settings, hide_word):
-    """Read all sentences for the specific word and separate the ones which were already shown from the new ones"""
-
-    sents_to_display, new_sents = {}, []
-    word = identify_word_from_id(displayed_sents, settings)
-    displayed_sents_set = set(displayed_sents)
-
-    sents_for_word_query = db.session.query(settings['table_obj']). \
-        with_entities(settings['id_obj'], settings['left_obj'], settings['word_obj'], settings['right_obj']). \
-        filter(settings['word_obj'] == word)
-
-    if hide_word:
-        hide_fun = hide
-    else:
-        hide_fun = dummy
-
-    for sent_id, left, word, right in sents_for_word_query.all():
-        word = hide_fun(word)
-        if sent_id in displayed_sents_set:
-            sents_to_display[sent_id] = [sent_id, left, word, right]
-        else:
-            new_sents.append([sent_id, left, word, right])
-
-    sents_to_display = [sents_to_display[sent_id] for sent_id in displayed_sents]  # In the original order!
-    shuffle(new_sents)
-
-    return sents_to_display, new_sents
-
-
-def identify_word_from_id(displayed_sents, settings):
-    """Identify word from (one of the) the already shown sentence ID
-        Raises sqlalchemy.orm.exc.NoResultFound if the query selects no rows
-        Raises sqlalchemy.orm.exc.MultipleResultsFound if multiple rows are returned
-    """
-
-    one_sent_id = displayed_sents[0]
-    word_query = db.session.query(settings['table_obj']). \
-        with_entities(settings['word_obj']). \
-        filter(settings['id_obj'] == one_sent_id)
-    word = word_query.scalar()
-
-    return word
-
-
-def dummy(word):
-    return word
-
-
-def hide(word):
-    """Hide word with same amount of X characters to maintain the length"""
-    return 'X' * len(word)
 
 
 # Create an app instance for later usage
