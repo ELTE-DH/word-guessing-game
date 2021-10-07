@@ -5,7 +5,7 @@ import os
 import sys
 from random import choice, randrange
 
-from sqlalchemy import func
+from sqlalchemy import func, Table
 from flask_sqlalchemy import SQLAlchemy, declarative_base
 from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, Flask, render_template, current_app
@@ -53,7 +53,7 @@ def create_app(config_filename='config.yaml'):
     flask_app = Flask('word-guessing-game')
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
-                                  SQLALCHEMY_DATABASE_URI='sqlite:///{0}'.format(config['database_name']),
+                                  SQLALCHEMY_DATABASE_URI='sqlite:///{0}'.format(config['db-config']['database_name']),
                                   SQLALCHEMY_TRACK_MODIFICATIONS=False,
                                   # JSONIFY_PRETTYPRINT_REGULAR=True,
                                   # JSON_AS_ASCII=False,
@@ -63,13 +63,13 @@ def create_app(config_filename='config.yaml'):
     # Setup SQLAlchemy database for pythonic usage (column obj to name mapping)
     db.init_app(flask_app)
     with flask_app.app_context():
-        base = declarative_base(bind=db.engine)
-        app_settings['table_obj'] = db.Table(config['table_name'], base.metadata, autoload=True)
-        col_objs = {col_obj.key: col_obj for col_obj in config['table_obj'].columns}
-        app_settings['id_obj'] = col_objs[config['id_name']]
-        app_settings['left_obj'] = col_objs[config['left_name']]
-        app_settings['word_obj'] = col_objs[config['word_name']]
-        app_settings['right_obj'] = col_objs[config['right_name']]
+        db_config = config['db-config']
+        app_settings['table_obj'] = Table(db_config['table_name'], declarative_base().metadata, autoload_with=db.engine)
+        col_objs = {col_obj.key: col_obj for col_obj in app_settings['table_obj'].columns}
+        app_settings['id_obj'] = col_objs[db_config['id_name']]
+        app_settings['left_obj'] = col_objs[db_config['left_name']]
+        app_settings['word_obj'] = col_objs[db_config['word_name']]
+        app_settings['right_obj'] = col_objs[db_config['right_name']]
 
     @flask_app.route('/')  # So one can create permalink for states!
     # @auth.login_required

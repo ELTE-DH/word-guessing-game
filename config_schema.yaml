@@ -1,9 +1,10 @@
-database_name: str(required=False, none=False)
-table_name: str(required=False, none=False)
-id_name: str(required=False, none=False)
-left_name: str(required=False, none=False)
-word_name: str(required=False, none=False)
-right_name: str(required=False, none=False)
+db-config:
+    database_name: str(required=False, none=False)
+    table_name: str(required=False, none=False)
+    id_name: str(required=False, none=False)
+    left_name: str(required=False, none=False)
+    word_name: str(required=False, none=False)
+    right_name: str(required=False, none=False)
 ui-strings:
     title: str(required=False, none=False)
     guess: str(required=False, none=False)

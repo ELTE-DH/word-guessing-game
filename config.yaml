@@ -1,9 +1,10 @@
-database_name: webcorpus_conc.db
-table_name: examples
-id_name: id
-left_name: left
-word_name: word
-right_name: right
+db-config:
+    database_name: webcorpus_conc.db
+    table_name: examples
+    id_name: id
+    left_name: left
+    word_name: word
+    right_name: right
 ui-strings:
     title: Szókitaláló játék
     guess: Tipp
