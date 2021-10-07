@@ -3,7 +3,7 @@
 
 import os
 import sys
-from random import choice, randrange
+from random import shuffle, randrange
 
 from sqlalchemy import func, Table
 from flask_sqlalchemy import SQLAlchemy, declarative_base
@@ -81,8 +81,8 @@ def create_app(config_filename='config.yaml'):
         messages, next_action, displayed_sent_ids, guessed_word, previous_guesses = parse_params(settings)
 
         # Execute one step in the game if there were no errors, else do nothing
-        messages, displayed_sents, buttons_enabled = game_logic(messages, next_action, displayed_sent_ids, guessed_word,
-                                                                previous_guesses, settings)
+        messages, displayed_sents, buttons_enabled = \
+            game_logic(messages, next_action, displayed_sent_ids, guessed_word, previous_guesses, settings)
 
         # Display messages (errors and informational ones)
         for m in messages:
@@ -127,12 +127,10 @@ def parse_params(settings):
 def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses, settings):
     """The main logic of the game"""
 
-    hide_word = True
     buttons_enabled = {'guess': True, 'next_sent': True, 'give_up': True, 'new_game': True}
 
     if len(messages) > 0 or action is None:
         # There were errors
-        hide_word = False
         sents_to_display = []
         buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
     elif action == 'guess':
@@ -143,37 +141,31 @@ def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses
             messages.append(settings['ui-strings']['win'])
             buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
         else:
+            hide_word = True
             messages.append(settings['ui-strings']['incorrect_guess'])
             previous_guesses.append(guessed_word)
 
-        sents_to_display, _ = read_all_sentences_for_word(displayed_sents, settings)
+        sents_to_display, _ = read_all_sentences_for_word(displayed_sents, settings, hide_word)
     elif action == 'next_sent':
         # Read sentences for the word, display already shown and select a new one
-        sents_to_display, new_sents = read_all_sentences_for_word(displayed_sents, settings)
+        sents_to_display, new_sents = read_all_sentences_for_word(displayed_sents, settings, hide_word=True)
 
         # Select a new sentence to display and insert it to the top
-        possible_new_sentids = list(new_sents.keys())
-        if len(possible_new_sentids) > 0:
-            next_sent = new_sents[choice(list(new_sents.keys()))]
-            sents_to_display.insert(0, next_sent)
+        if len(new_sents) > 0:
+            sents_to_display.insert(0, new_sents[0])
         else:
             buttons_enabled['next_sent'] = False
             messages.append(settings['ui-strings']['no_more_sent_for_word'])
     elif action == 'give_up':
         # Reveal word in already displayed sentences
         buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
-        hide_word = False
-        sents_to_display, _ = read_all_sentences_for_word(displayed_sents, settings)
+        sents_to_display, _ = read_all_sentences_for_word(displayed_sents, settings, hide_word=False)
     elif action == 'new_game':
         # Select a random sentence
         previous_guesses.clear()
         sents_to_display = select_one_random_sentence(settings)
     else:
         raise NotImplementedError('Nonsense state!')
-
-    # Hide if neccesarry
-    if hide_word:
-        hide(sents_to_display)
 
     return messages, sents_to_display, buttons_enabled
 
@@ -194,26 +186,34 @@ def select_one_random_sentence(settings):
         filter(settings['id_obj'] == random_sent_id)
     sent_id, left, word, right = entry_query.one()
 
-    return [[sent_id, left, word, right]]
+    return [[sent_id, left, hide(word), right]]
 
 
-def read_all_sentences_for_word(displayed_sents, settings):
+def read_all_sentences_for_word(displayed_sents, settings, hide_word):
     """Read all sentences for the specific word and separate the ones which were already shown from the new ones"""
 
-    sents_to_display, new_sents = {}, {}
+    sents_to_display, new_sents = {}, []
     word = identify_word_from_id(displayed_sents, settings)
     displayed_sents_set = set(displayed_sents)
 
     sents_for_word_query = db.session.query(settings['table_obj']). \
         with_entities(settings['id_obj'], settings['left_obj'], settings['word_obj'], settings['right_obj']). \
         filter(settings['word_obj'] == word)
+
+    if hide_word:
+        hide_fun = hide
+    else:
+        hide_fun = dummy
+
     for sent_id, left, word, right in sents_for_word_query.all():
+        word = hide_fun(word)
         if sent_id in displayed_sents_set:
             sents_to_display[sent_id] = [sent_id, left, word, right]
         else:
-            new_sents[sent_id] = [sent_id, left, word, right]
+            new_sents.append([sent_id, left, word, right])
 
     sents_to_display = [sents_to_display[sent_id] for sent_id in displayed_sents]  # In the original order!
+    shuffle(new_sents)
 
     return sents_to_display, new_sents
 
@@ -233,12 +233,13 @@ def identify_word_from_id(displayed_sents, settings):
     return word
 
 
-def hide(sents_to_display):
+def dummy(word):
+    return word
+
+
+def hide(word):
     """Hide word with same amount of X characters to maintain the length"""
-    word = sents_to_display[0][2]
-    hidden = 'X' * len(word)
-    for i, _ in enumerate(sents_to_display):
-        sents_to_display[i][2] = hidden
+    return 'X' * len(word)
 
 
 # Create an app instance for later usage
