@@ -15,7 +15,7 @@ def select_elems(inp_fh, out_fh, elems):
     no = -1
     for line in inp_fh:
         line = line.rstrip()
-        word, left, right = line.split('\t', maxsplit=2)
+        word, left, right, freq = line.split('\t', maxsplit=3)
         if word == prev_word:
             conc_list.append(line)
         else:

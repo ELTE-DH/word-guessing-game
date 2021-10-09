@@ -25,12 +25,13 @@ def select_elems(inp_fh, out_fh, no_of_elements=30):
 
 
 def sample_elems(conc_list, no_of_elements, out_fh):
-    if len(conc_list) > no_of_elements:
+    freq = len(conc_list)
+    if freq > no_of_elements:
         chosen_concs = sample(conc_list, no_of_elements)
     else:
         chosen_concs = conc_list
     for c in chosen_concs:
-        print(c, file=out_fh)
+        print(c, freq, sep='\t', file=out_fh)
     conc_list.clear()
 
 

@@ -41,7 +41,7 @@ count: filter_final.txt.gz
 ballance: conc_filtered.txt.gz
 	# Select 30 random concordances for each word to ballance frequent and rare words
 	export LC_ALL="C.UTF-8" && pigz -cd conc_filtered.txt.gz | python3 random_select.py | pigz -n > sampled_concs.txt.gz
-	echo "dd1bf2abbd0678123755caf51dc9d4f91b4623f4a9fb74eb3adf02eea128eecf sampled_concs.txt.gz" | sha256sum -c - || exit 1
+	echo "c948ceb92566d7d2d820d5636a4275888486061c346d9127328a5bf1b9b3751a sampled_concs.txt.gz" | sha256sum -c - || exit 1
 	# about 18 minutes
 	# Words (to be guessed): 653 813
 	# Concordances: 19 614 390
@@ -66,7 +66,8 @@ prevcons: PrevCons.sqlite3 venv
 	# Requires the database file (PrevCons.sqlite3) and the virtualenv (venv) to be created
 	export LC_ALL="C.UTF-8" && ./venv/bin/python3 filter_prevcons.py | \
 	 sort --parallel=$$(nproc) -T ~/tmp -S10% --compress-program=pigz | \
-	 ./uniq_2nd_field.sh | ./uniq_3rd_field.sh | ./venv/bin/python3 create_sqldb.py -f prevcons_conc.db
+	 ./uniq_2nd_field.sh | ./uniq_3rd_field.sh | sed 's/^\(.*\)/\1\t1/' | \
+	 ./venv/bin/python3 create_sqldb.py -f prevcons_conc.db
 	echo 'Database succesfully created! (The errors above were not fatal.)'
 	# Words (to be guessed): 122
 	# Concordances: 15 816
