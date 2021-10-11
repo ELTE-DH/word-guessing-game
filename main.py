@@ -129,7 +129,7 @@ def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses
         buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
     elif action == 'guess':
         # Get the word for ID and check it. If matches reveal word in displayed sentences
-        word = context_bank.identify_word_from_id(displayed_sents)
+        word, _ = context_bank.identify_word_from_id(displayed_sents[0])  # Empty list is handled in parse_params()
         if word == guessed_word:
             hide_word = False
             messages.append(ui_strings['win'])
@@ -139,10 +139,10 @@ def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses
             messages.append(ui_strings['incorrect_guess'])
             previous_guesses.append(guessed_word)
 
-        sents_to_display, _ = context_bank.read_all_sentences_for_word(displayed_sents, hide_word=hide_word)
+        sents_to_display, _ = context_bank.read_all_examples_for_word(word, displayed_sents, hide_word=hide_word)
     elif action == 'next_sent':
         # Read sentences for the word, display already shown and select a new one
-        sents_to_display, new_sents = context_bank.read_all_sentences_for_word(displayed_sents, hide_word=True)
+        sents_to_display, new_sents = context_bank.read_all_examples_for_word(None, displayed_sents, hide_word=True)
 
         # Select a new sentence to display and insert it to the top
         if len(new_sents) > 0:
@@ -153,7 +153,7 @@ def game_logic(messages, action, displayed_sents, guessed_word, previous_guesses
     elif action == 'give_up':
         # Reveal word in already displayed sentences
         buttons_enabled = {'guess': False, 'next_sent': False, 'give_up': False, 'new_game': True}
-        sents_to_display, _ = context_bank.read_all_sentences_for_word(displayed_sents, hide_word=False)
+        sents_to_display, _ = context_bank.read_all_examples_for_word(None, displayed_sents, hide_word=False)
     elif action == 'new_game':
         # Select a random sentence
         previous_guesses.clear()

@@ -5,6 +5,7 @@ db-config:
     left_name: left
     word_name: word
     right_name: right
+    freq: freq
 ui-strings:
     title: Szókitaláló játék
     guess: Tipp
