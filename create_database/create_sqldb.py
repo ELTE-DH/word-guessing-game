@@ -12,7 +12,7 @@ def create_db(db_fn):
     engine = create_engine(f'sqlite:///{db_fn}')
     metadata = MetaData()
 
-    sqlite_table = Table('examples', metadata,
+    sqlite_table = Table('lines', metadata,
                          Column('id', Integer, primary_key=True),
                          Column('left', String),
                          Column('word', String, index=True),
@@ -51,7 +51,7 @@ def gen_rows(inp_fh=sys.stdin):
 
 
 def parse_args():
-    parser = ArgumentParser(description='Create SQLite concordance database from TSV file (word, left, rigth)')
+    parser = ArgumentParser(description='Create SQLite concordance database from TSV file (word, left, right, freq)')
     parser.add_argument('-f', '--db-filename', dest='db_filename', required=True,
                         help='The filename of the SQLite database', metavar='DBNAME.db')
     options = vars(parser.parse_args())

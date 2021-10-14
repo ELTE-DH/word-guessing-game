@@ -1,25 +1,25 @@
 db-config:
     database_name: webcorpus_conc.db
-    table_name: examples
+    table_name: lines
     id_name: id
     left_name: left
     word_name: word
     right_name: right
-    freq: freq
+    freq_name: freq
 ui-strings:
     title: Szókitaláló játék
     guess: Tipp
     give_up: Szabad a gazda
-    next_sent: Még egy mondat
+    next_line: Még egy sor
     new_game: Új játék
     previous_guesses: Eddigi tippek
     no_guessed_word_specified: Hiányzó paraméter (a tippelt szó) !
-    no_displayed_sentences_specified: Hiányzó paraméter (a megjelenített mondatok azonosítói) !
+    no_displayed_lines_specified: Hiányzó paraméter (a megjelenített sorok azonosítói) !
     no_action_specified: Hiányzó paraméter (a kövekező lépés) !
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
-    no_more_sent_for_word: Nincs több mondat! :(
-    footer: Találd ki a szót minél kevesebb mondatból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)
+    no_more_line_for_word: Nincs több sor! :(
+    footer: Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)
             <br><br>
             Adatbázis:\ Nekeskey Dávid Márk – <a href="https://hlt.bme.hu/hu/resources/webcorpus2">Magyar Webkorpusz 2.0</a><br>
             <br>

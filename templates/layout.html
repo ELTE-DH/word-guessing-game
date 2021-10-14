@@ -37,17 +37,17 @@
                 <div style="text-align: center; overflow: hidden; display:table-cell; width: 60%;">
                     <label for="guessed_word">Tipp: </label><input type="text" name="guessed_word" id="guessed_word">
                     <input type="submit" name="guess" value="{{ ui_strings.guess }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
-                    <input type="submit" name="next_sent" value="{{ ui_strings.next_sent }}" {% if not buttons_enabled.next_sent %}disabled{%endif%}>
+                    <input type="submit" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
                     <br><br>
                     <input type="submit" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
                     <input type="submit" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
                     <br><br>
-                    {%- for sent_id, pre, word, post in displayed_sents %}
-                    <input type="hidden" name="displayed_sents[]" value="{{ sent_id }}">
+                    {%- for line_id, pre, word, post in displayed_lines %}
+                    <input type="hidden" name="displayed_lines[]" value="{{ line_id }}">
                     {%- endfor %}
                     <table style="border-collapse: collapse; border-spacing: 0; margin-left: auto; margin-right: auto;">
                         <tbody>
-                            {%- for sent_id, pre, word, post in displayed_sents %}
+                            {%- for line_id, pre, word, post in displayed_lines %}
                             <tr>
                                 <td style="border-width:0px; text-align: right;">...{{ pre }}</td>
                                 <td style="border-width:0px; text-align: center;"> <strong>{{ word }}</strong> </td>

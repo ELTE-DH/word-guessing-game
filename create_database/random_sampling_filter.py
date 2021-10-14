@@ -36,6 +36,6 @@ def sample_elems(conc_list, out_fh):
 
 
 if __name__ == '__main__':
-    count_all = 653813
+    count_all = 653813  # From previous step
     sampled = set(sample(range(count_all), 8000))
     select_elems(sys.stdin, sys.stdout, sampled)
