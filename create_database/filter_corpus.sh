@@ -1,4 +1,4 @@
-export LC_ALL="C.UTF-8" pigz -cd full_spl.gz  \
+LC_ALL="C.UTF-8" sed 's/\t//g' | \
  egrep "^([^ ]+ ){10}" | egrep -v "([^ ]+ ){50,}" | \
  egrep -v "[^ ]{26,}" | \
  egrep -v "(^| )([A-ZÍŰÁÉÚŐÓÜÖ][^ ]* ){2}[A-ZÍŰÁÉÚŐÓÜÖ][^ ]*" | \
@@ -8,4 +8,4 @@ export LC_ALL="C.UTF-8" pigz -cd full_spl.gz  \
  egrep -v "(\\\\[^\\\\]*){3,}" | grep -v "�" | \
  grep -v "[õû]" | \
  egrep -v "&[a-z#0-9]{2,8};" | \
- sort --parallel=$(nproc) -T ~/tmp -S10% --compress-program=pigz -u | pigz -n > filter_final.txt.gz
+ sort --parallel=$(nproc) -T ~/tmp -S10% --compress-program=pigz -u

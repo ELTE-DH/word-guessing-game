@@ -40,7 +40,7 @@ with sessionmaker(db)() as session:
 
 """
 export LC_ALL="C.UTF-8" && ./venv/bin/python3 filter_prevcons.py | \
- sort --parallel=$$(nproc) -T ~/tmp -S10% --compress-program=pigz | \
- ./uniq_2nd_field.sh | ./uniq_3rd_field.sh | sed 's/^\(.*\)/\1\t1/' | \
- ./venv/bin/python3 create_sqldb.py -f prevcons_conc.db
+    sort --parallel=$$(nproc) -T ~/tmp -S10% --compress-program=pigz | \
+    ./uniq_2nd_field.sh | ./uniq_3rd_field.sh | sed 's/^\(.*\)/\1\t1/' | \
+    ./venv/bin/python3 create_sqldb.py -f prevcons_conts.db
 """

@@ -3,6 +3,7 @@
 
 import sys
 from random import seed, sample
+from argparse import ArgumentParser, FileType
 
 
 # Set random seed for reproducibility
@@ -36,4 +37,11 @@ def sample_elems(conc_list, no_of_elements, out_fh):
 
 
 if __name__ == '__main__':
-    select_elems(sys.stdin, sys.stdout)
+    parser = ArgumentParser(description='Select random contexts for each word to ballance frequent and rare words')
+    parser.add_argument('-i', '--input', help='Input text file name (omit for STDIN)', required=False,
+                        default=sys.stdin, type=FileType(encoding='UTF-8'))
+    parser.add_argument('-o', '--output', help='Output text file name (omit for STDOUT)', required=False,
+                        default=sys.stdout, type=FileType('w', encoding='UTF-8'))
+    parser.add_argument('-n', '--no-of-conts', help='Number of context for each word to keep', required=True, type=int)
+    args = parser.parse_args()
+    select_elems(args.input, args.output, args.no_of_conts)

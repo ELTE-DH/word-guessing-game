@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Count lines (as uniq -c) based on the first field (TAB separated) and print only groups larger than
-# the specified limit (default: 30)
+# the specified limit ($1)
 
-uniq_c_1st_field="mawk -v limit=30 -F\$'\t' -v OFS=\$'\t' 'BEGIN {gl=getline; prev_field=\$1; prev_line[1]=\$0; count=1}
+uniq_c_1st_field="mawk -v limit=$1 -F\$'\t' -v OFS=\$'\t' 'BEGIN {gl=getline; prev_field=\$1; prev_line[1]=\$0; count=1}
                                                            { if (prev_field != \$1) {
                                                                  if (count >= limit) {
                                                                      for (i in prev_line) {
