@@ -1,0 +1,10 @@
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-0.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-1.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-2.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-3.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-4.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-5.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-6.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-7.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-8.tar.gz
+wget ftp://ftp.mokk.bme.hu/Language/Hungarian/Crawl/Web2/web2-4p-9.tar.gz
