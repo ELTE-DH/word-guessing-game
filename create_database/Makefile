@@ -2,15 +2,15 @@ all: webcorpus1 webcorpus2
 
 webcorpus1:
 	make download_webcorpus1 extract_webcorpus1 filter count ballance venv sample \
-        FILTER_FINAL_SUM="d185bb0ee9140c0af8f0275cc77f3b83de0989d10d2ed851664350352e72e109" \
-        CONTS_FILTERED_SUM="82bc817d0be97fbb4afd30b7ef53a58b181974d759981d62410013c7f5dc8048" \
-        BALLANCED_CONTS="6839b6cc647a57634d28432c6d490cb44363021fccd233a5fe957e0dedd3bf1b"
+        FILTER_FINAL_SUM?="d185bb0ee9140c0af8f0275cc77f3b83de0989d10d2ed851664350352e72e109" \
+        CONTS_FILTERED_SUM?="3913fb72b0ac92d82f7ab524240bfccd2e6143aac27212800c370f3a9d8e75e7" \
+        BALLANCED_CONTS?="6839b6cc647a57634d28432c6d490cb44363021fccd233a5fe957e0dedd3bf1b"
 
 webcorpus2:
 	make download_webcorpus2 extract_webcorpus2 filter count ballance venv sample \
-        FILTER_FINAL_SUM="172c600756626b619b37391ceff1438b4da488925c4e83c3d3caa7def2bf5dba" \
-        CONTS_FILTERED_SUM="b906f2894787bd9fcb95a866457e4625206796ea18238eb80884a0948a67908f" \
-        BALLANCED_CONTS="c948ceb92566d7d2d820d5636a4275888486061c346d9127328a5bf1b9b3751a"
+        FILTER_FINAL_SUM?="172c600756626b619b37391ceff1438b4da488925c4e83c3d3caa7def2bf5dba" \
+        CONTS_FILTERED_SUM?="b906f2894787bd9fcb95a866457e4625206796ea18238eb80884a0948a67908f" \
+        BALLANCED_CONTS?="c948ceb92566d7d2d820d5636a4275888486061c346d9127328a5bf1b9b3751a"
 
 prevcons:
 	make download_prevcons process_prevcons
@@ -60,7 +60,7 @@ filter:
 	export LC_ALL="C.UTF-8" && pigz -cd full_spl.txt.gz | ./filter_corpus.sh | pigz -n > filter_final.txt.gz
 	echo "$(FILTER_FINAL_SUM) filter_final.txt.gz" | sha256sum -c - || exit 1
 	# Webcorpus 1.0:
-	# About 13 minutes
+	# About 14 minutes
 	# Words: 272 699 082
 	# Sentences: 13 931 625
 	#
@@ -83,9 +83,9 @@ count: filter_final.txt.gz
         pigz -n > conts_filtered.txt.gz
 	echo "$(CONTS_FILTERED_SUM) conts_filtered.txt.gz" | sha256sum -c - || exit 1
 	# Webcorpus 1.0:
-	# About ??? minutes
-	# Words (to be guessed): 127 221
-	# Contexts: 699 039 205
+	# About 6 minutes
+	# Words (to be guessed): 127 217
+	# Contexts: 63 549 963
 	#
 	# Webcorpus 2.0:
 	# About 118 minutes
@@ -98,7 +98,7 @@ ballance: conts_filtered.txt.gz
         pigz -n > ballanced_conts.txt.gz
 	echo "$(BALLANCED_CONTS) ballanced_conts.txt.gz" | sha256sum -c - || exit 1
 	# Webcorpus 1.0:
-	# About ??? minutes
+	# Less than a minute
 	# Words (to be guessed): 286
 	# Contexts: 8 580
 	#
