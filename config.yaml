@@ -1,5 +1,5 @@
 db-config:
-    database_name: webcorpus_conc.db
+    database_name: webcorpus1_conts.db
     table_name: lines
     id_name: id
     left_name: left
