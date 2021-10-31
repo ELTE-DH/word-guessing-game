@@ -1,4 +1,4 @@
-db-config:
+db_config:
     database_name: webcorpus1_conts.db
     table_name: lines
     id_name: id
@@ -6,7 +6,11 @@ db-config:
     word_name: word
     right_name: right
     freq_name: freq
-ui-strings:
+general_config:
+    left_size: 5
+    right_size: 5
+    hide_char: X
+ui_strings:
     title: Szókitaláló játék
     guess: Tipp
     give_up: Szabad a gazda
@@ -19,10 +23,10 @@ ui-strings:
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
     no_more_line_for_word: Nincs több sor! :(
-    footer: Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)
-            <br><br>
-            Adatbázis:\ Nekeskey Dávid Márk – <a href="https://hlt.bme.hu/hu/resources/webcorpus2">Magyar Webkorpusz 2.0</a><br>
+    footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)</p>
             <br>
+            <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>
+            <p>Adatbázis:\ Nekeskey Dávid Márk – <a href="https://hlt.bme.hu/hu/resources/webcorpus2">Magyar Webkorpusz 2.0</a></p>
             <p>A Magyar Webkorpusz 2.0 felhasználása esetén az alábbi publikáció hivatkozandó:</p>
             <ul>
                 <li><a href="https://hlt.bme.hu/media/pdf/nemeskey_thesis.pdf">Nemeskey, Dávid Márk (2020). “Natural Language Processing methods for Language Modeling”. PhD thesis. Eötvös Loránd University.</a></li>

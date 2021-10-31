@@ -45,13 +45,13 @@ def create_app(config_filename='config.yaml'):
 
     # Read configuration
     config = load_and_validate_config(config_filename)
-    config['ui-strings']['footer'] = config['ui-strings']['footer'].replace(r':\ ', ': ')
+    config['ui_strings']['footer'] = config['ui_strings']['footer'].replace(r':\ ', ': ')
 
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
-                                  SQLALCHEMY_DATABASE_URI='sqlite:///{0}'.format(config['db-config']['database_name']),
+                                  SQLALCHEMY_DATABASE_URI='sqlite:///{0}'.format(config['db_config']['database_name']),
                                   SQLALCHEMY_TRACK_MODIFICATIONS=False,
                                   # JSONIFY_PRETTYPRINT_REGULAR=True,
                                   # JSON_AS_ASCII=False,
@@ -62,7 +62,10 @@ def create_app(config_filename='config.yaml'):
     db = SQLAlchemy()
     db.init_app(flask_app)
     with flask_app.app_context():
-        app_settings['context_bank'] = ContextBank(config['db-config'], db, hide_char='X')
+        left_size = config['general_config']['left_size']
+        right_size = config['general_config']['right_size']
+        hide_char = config['general_config']['hide_char']
+        app_settings['context_bank'] = ContextBank(config['db_config'], db, left_size, right_size, hide_char)
 
     @flask_app.route('/')  # So one can create permalink for states!
     # @auth.login_required
@@ -71,19 +74,19 @@ def create_app(config_filename='config.yaml'):
 
         settings = current_app.config['APP_SETTINGS']
         # Parse parameters and put errors into messages if necessary
-        messages, next_action, displayed_line_ids, guessed_word, previous_guesses = parse_params(settings['ui-strings'])
+        messages, next_action, displayed_line_ids, guessed_word, previous_guesses = parse_params(settings['ui_strings'])
 
         # Execute one step in the game if there were no errors, else do nothing
         messages, displayed_lines, buttons_enabled = \
             game_logic(messages, next_action, displayed_line_ids, guessed_word, previous_guesses,
-                       settings['ui-strings'], settings['context_bank'])
+                       settings['ui_strings'], settings['context_bank'])
 
         # Display messages (errors and informational ones)
         for m in messages:
             flash(m)
 
         # Render output HTML
-        out_content = render_template('layout.html', ui_strings=settings['ui-strings'], buttons_enabled=buttons_enabled,
+        out_content = render_template('layout.html', ui_strings=settings['ui_strings'], buttons_enabled=buttons_enabled,
                                       previous_guesses=previous_guesses, displayed_lines=displayed_lines)
         return out_content
 
