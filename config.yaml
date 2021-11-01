@@ -10,6 +10,7 @@ general_config:
     left_size: 5
     right_size: 5
     hide_char: X
+    guesser_baseurl: null
 ui_strings:
     title: Szókitaláló játék
     guess: Tipp

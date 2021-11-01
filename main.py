@@ -3,9 +3,10 @@
 
 import os
 import sys
-
+from urllib.parse import urlencode
 
 from flask_sqlalchemy import SQLAlchemy
+from requests import get as requests_get
 from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, Flask, render_template, current_app
 
@@ -67,6 +68,13 @@ def create_app(config_filename='config.yaml'):
         hide_char = config['general_config']['hide_char']
         app_settings['context_bank'] = ContextBank(config['db_config'], db, left_size, right_size, hide_char)
 
+        if config['general_config']['guesser_baseurl'] is not None:
+            word_similarity_fun = word_similarity
+        else:
+            word_similarity_fun = dummy_similarity_fun
+
+        app_settings['word_similarity'] = word_similarity_fun
+
     @flask_app.route('/')  # So one can create permalink for states!
     # @auth.login_required
     def index():
@@ -86,6 +94,9 @@ def create_app(config_filename='config.yaml'):
         for m in messages:
             flash(m)
 
+        word_similarity_fun(settings['general_config']['guesser_baseurl'], settings['context_bank'],
+                            displayed_line_ids, previous_guesses)
+
         # Render output HTML
         out_content = render_template('layout.html', ui_strings=settings['ui_strings'], buttons_enabled=buttons_enabled,
                                       previous_guesses=previous_guesses, previous_guesses_bert=previous_guesses_bert,
@@ -93,6 +104,27 @@ def create_app(config_filename='config.yaml'):
         return out_content
 
     return flask_app
+
+
+def word_similarity(server_baseurl, context_bank, displayed_lines, previous_guesses):
+    if len(displayed_lines) > 0 and len(previous_guesses) > 0:
+        word, _ = context_bank.identify_word_from_id(displayed_lines[0])
+        for i, guess in enumerate(previous_guesses):
+            input_params = {'word1': word, 'word2': guess, 'guesser': 'cbow'}
+            sim = requests_get(f'{server_baseurl}/word_similarity?{urlencode(input_params, doseq=True)}')
+            if sim.status_code == 200:
+                resp_json = sim.json()
+                word_sim = resp_json['word_similarity']
+                if word_sim != '-1.0':  # TODO omit or not omit similarity for unknown words?
+                    previous_guesses[i] = (guess, resp_json['word_similarity'])
+                else:
+                    previous_guesses[i] = (guess, '')
+
+
+def dummy_similarity_fun(_, __, ___, previous_guesses):
+    if len(previous_guesses) > 0:
+        for i, guess in enumerate(previous_guesses):
+            previous_guesses[i] = (guess, '')
 
 
 def parse_params(ui_strings):

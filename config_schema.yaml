@@ -10,6 +10,7 @@ general_config:
     left_size: int(none=False)
     right_size: int(none=False)
     hide_char: str(none=False)
+    guesser_baseurl: any(str(none=False), null())
 ui_strings:
     title: str(none=False)
     guess: str(none=False)

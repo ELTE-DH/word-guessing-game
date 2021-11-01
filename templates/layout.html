@@ -24,12 +24,16 @@
                 <div style="text-align: left; display:table-cell; width: 15%;">
                 {% if previous_guesses|length > 0 -%}
                     {{ ui_strings.previous_guesses }}:
-                    {%- for word in previous_guesses %}
+                    {%- for word, similarity in previous_guesses %}
                     <input type="hidden" name="previous_guesses[]" value="{{ word }}">
                     {%- endfor %}
                     <ul>
-                        {%- for word in previous_guesses %}
+                        {%- for word, similarity in previous_guesses %}
+                        {%- if similarity|length > 0 -%}
+                        <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }} ({{ similarity }})</li>
+                        {%- else -%}
                         <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }}</li>
+                        {%- endif -%}
                         {%- endfor %}
                     </ul>
                 {% endif -%}
@@ -61,12 +65,12 @@
                 <div style="text-align: left; display:table-cell; width: 15%;">
                 {% if previous_guesses_bert|length > 0 -%}
                     {{ ui_strings.previous_guesses_bert }}:
-                    {%- for word in previous_guesses_bert %}
+                    {%- for word, similarity in previous_guesses_bert %}
                     <input type="hidden" name="previous_guesses_bert[]" value="{{ word }}">
                     {%- endfor %}
                     <ul>
-                        {%- for word in previous_guesses_bert %}
-                        <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }}</li>
+                        {%- for word, similarity in previous_guesses_bert %}
+                        <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }} ({{ similarity }})</li>
                         {%- endfor %}
                     </ul>
                 {% endif -%}
