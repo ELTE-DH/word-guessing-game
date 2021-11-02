@@ -6,26 +6,31 @@ db_config:
     word_name: word
     right_name: right
     freq_name: freq
-general_config:
+contextbank_config:
     left_size: 5
     right_size: 5
     hide_char: X
-    guesser_baseurl: null
+guesser_config:
+    baseurl: null
+    guesser: null
+    retry_wrong: null
+    top_n: null
 ui_strings:
     title: Szókitaláló játék
     guess: Tipp
     give_up: Szabad a gazda
     next_line: Még egy sor
     new_game: Új játék
-    new_game_vs_bert: Új játék a BERT ellen
+    new_game_vs_other: Új játék a BERT ellen
     previous_guesses: Eddigi tippek
-    previous_guesses_bert: A BERT eddigi tippjei
+    previous_guesses_other: A BERT eddigi tippjei
     no_guessed_word_specified: Hiányzó paraméter (a tippelt szó) !
     no_displayed_lines_specified: Hiányzó paraméter (a megjelenített sorok azonosítói) !
     no_action_specified: Hiányzó paraméter (a kövekező lépés) !
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
     no_more_line_for_word: Nincs több sor! :(
+    error: Hiba történt
     footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)</p>
             <br>
             <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>
