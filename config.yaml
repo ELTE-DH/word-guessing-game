@@ -30,6 +30,9 @@ ui_strings:
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
     no_more_line_for_word: Nincs több sor! :(
+    other_win: A BERT eltalálta!
+    other_gave_up: A BERT feladta!
+    other_guess_state_invalid: Nem megfelelő paraméterérték (other_guess_state) !
     error: Hiba történt
     footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)</p>
             <br>

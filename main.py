@@ -9,7 +9,7 @@ from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, Flask, render_template, current_app
 
 from context_bank import ContextBank
-from guesser_helper import word_similarity, dummy_similarity_fun, guess, str2bool
+from guesser_helper import word_similarity, dummy_similarity_fun, guess
 
 
 def load_and_validate_config(config_filename=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.yaml'),
@@ -90,7 +90,7 @@ def create_app(config_filename='config.yaml'):
         messages, next_action, displayed_line_ids, this_player, other_player = parse_params(settings['ui_strings'])
 
         # Execute one step in the game if there were no errors, else do nothing
-        messages, displayed_lines, buttons_enabled, prev_guesses_this, prev_guesses_other = \
+        messages, displayed_lines, buttons_enabled, prev_guesses_this, prev_guesses_other, other_guess_state = \
             game_logic(messages, next_action, displayed_line_ids, this_player, other_player,
                        settings['guesser_config'], settings['ui_strings'], settings['context_bank'])
 
@@ -101,7 +101,7 @@ def create_app(config_filename='config.yaml'):
         # Render output HTML
         out_content = render_template('layout.html', ui_strings=settings['ui_strings'], buttons_enabled=buttons_enabled,
                                       previous_guesses=prev_guesses_this, previous_guesses_other=prev_guesses_other,
-                                      displayed_lines=displayed_lines)
+                                      displayed_lines=displayed_lines, other_guess_state=other_guess_state)
         return out_content
 
     return flask_app
@@ -113,8 +113,9 @@ def parse_params(ui_strings):
 
     prev_guesses = request.args.getlist('previous_guesses[]')
     prev_guesses_other = request.args.getlist('previous_guesses_other[]')
-    other_guessed = str2bool(request.args.get('other_guessed', ''), False)
-    other_player = (prev_guesses_other, other_guessed)
+    other_guess_state = request.args.get('other_guess_state', '0')
+    if other_guess_state not in {'0', '1', '2'}:
+        messages.append(ui_strings['other_guess_state_invalid'])
 
     guessed_word = request.args.get('guessed_word')
     if 'guess' in request.args and guessed_word is None:
@@ -125,7 +126,7 @@ def parse_params(ui_strings):
     if len({'guess', 'give_up', 'next_line'}.intersection(request.args.keys())) > 0 and len(displayed_line_ids) == 0:
         messages.append(ui_strings['no_displayed_lines_specified'])
 
-    for action in ('guess', 'next_line', 'give_up', 'new_game', 'new_game_vs_bert'):
+    for action in ('guess', 'next_line', 'give_up', 'new_game', 'new_game_vs_other'):
         if action in request.args:
             next_action = action
             break
@@ -135,13 +136,20 @@ def parse_params(ui_strings):
     if len(request.args) > 0 and next_action is None:
         messages.append(ui_strings['no_action_specified'])
 
-    return messages, next_action, displayed_line_ids, (prev_guesses, guessed_word), other_player
+    if next_action == 'new_game':
+        other_guess_state = '2'  # Gave up if no other player is specified
+    if next_action == 'new_game_vs_other':
+        next_action = 'new_game'
+        other_guess_state = '0'
+
+    return messages, next_action, displayed_line_ids, (prev_guesses, guessed_word), \
+        (prev_guesses_other, other_guess_state)
 
 
 def game_logic(messages, action, displayed_lines, this_player, other_player, guesser_config, ui_strings, context_bank):
     """The main logic of the game"""
     previous_guesses, guessed_word = this_player
-    previous_guesses_other, other_guessed = other_player
+    previous_guesses_other, other_guess_state = other_player
 
     buttons_enabled = {'guess': True, 'next_line': True, 'give_up': True, 'new_game': True}
 
@@ -163,18 +171,20 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
 
         lines_to_display, _ = context_bank.read_all_lines_for_word(word, displayed_lines, hide_word=hide_word)
 
-        if guesser_config.get('baserurl') is not None:
-            if not other_guessed:
-                other_guess, msg = guess(guesser_config, lines_to_display, word, previous_guesses_other)
-                if len(msg) == 0:
-                    if word != other_guess:
-                        previous_guesses_other.append(other_guess)
-                    elif other_guess != '_':
-                        pass  # TODO BERT has guessed it!
-                    else:
-                        pass  # TODO BERT gave up
+        if guesser_config.get('baseurl') is not None and other_guess_state == '0':
+            other_guesses, msg = guess(guesser_config, lines_to_display, word, previous_guesses_other)
+            other_guess = other_guesses[0]  # Always padded to top_n with '_' characters
+            if len(msg) == 0:
+                if word == other_guess:
+                    messages.append(ui_strings['other_win'])
+                    other_guess_state = '1'
+                elif other_guess == '_':
+                    other_guess_state = '2'
+                    messages.append(ui_strings['other_gave_up'])
                 else:
-                    messages.append(f'{ui_strings["error"]}: {msg}')
+                    previous_guesses_other.append(other_guess)
+            else:
+                messages.append(f'{ui_strings["error"]}: {msg}')
 
     elif action == 'next_line':
         # Read lines for the word, display already shown and select a new one
@@ -199,15 +209,17 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
         raise NotImplementedError('Nonsense state!')
 
     # Similarity helper
-    for pg in (previous_guesses, previous_guesses_other):
-        new_pg, msg = guesser_config['word_similarity_fun'](guesser_config, context_bank, lines_to_display,
-                                                            previous_guesses)
-        if len(msg) == 0:
+    if guesser_config.get('baseurl') is not None:
+        for pg in (previous_guesses, previous_guesses_other):
+            new_pg, msg = guesser_config['word_similarity_fun'](guesser_config, context_bank, lines_to_display, pg)
+            if len(msg) > 0:
+                new_pg, _ = dummy_similarity_fun(previous_guesses=pg)  # Use dummy similarity instead
+                messages.append(f'{ui_strings["error"]}: {msg}')
             pg[:] = new_pg  # Overwrite list!
-        else:
-            messages.append(f'{ui_strings["error"]}: {msg}')
+    else:
+        new_pg, _ = dummy_similarity_fun(previous_guesses=previous_guesses)  # Use dummy similarity instead
 
-    return messages, lines_to_display, buttons_enabled, previous_guesses, previous_guesses_other
+    return messages, lines_to_display, buttons_enabled, previous_guesses, previous_guesses_other, other_guess_state
 
 
 # Create an app instance for later usage

@@ -13,6 +13,7 @@ contextbank_config:
 guesser_config:
     baseurl: any(str(none=False), null())
     guesser: any(str(none=False), null())
+    similarity: any(str(none=False), null())
     retry_wrong: any(bool(none=False), null())
     top_n: any(int(min=1, none=False), null())
 ui_strings:
@@ -30,5 +31,8 @@ ui_strings:
     win: str(none=False)
     incorrect_guess: str(none=False)
     no_more_line_for_word: str(none=False)
+    other_win: str(none=False)
+    other_gave_up: str(none=False)
+    other_guess_state_invalid: str(none=False)
     error: str(none=False)
     footer: str(none=False)

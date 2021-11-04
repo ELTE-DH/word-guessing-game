@@ -63,6 +63,7 @@
                     </table>
                 </div>
                 <div style="text-align: left; display:table-cell; width: 15%;">
+                <input type="hidden" name="other_guess_state" value="{{ other_guess_state }}">
                 {% if previous_guesses_other|length > 0 -%}
                     {{ ui_strings.previous_guesses_other }}:
                     {%- for word, similarity in previous_guesses_other %}
