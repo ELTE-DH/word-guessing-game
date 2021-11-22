@@ -13,6 +13,7 @@ contextbank_config:
 guesser_config:
     baseurl: null
     guesser: null
+    similarity: null
     retry_wrong: null
     top_n: null
 ui_strings:

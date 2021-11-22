@@ -216,8 +216,11 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
                 new_pg, _ = dummy_similarity_fun(previous_guesses=pg)  # Use dummy similarity instead
                 messages.append(f'{ui_strings["error"]}: {msg}')
             pg[:] = new_pg  # Overwrite list!
+        buttons_enabled['new_game_vs_other'] = True
     else:
         new_pg, _ = dummy_similarity_fun(previous_guesses=previous_guesses)  # Use dummy similarity instead
+        previous_guesses = new_pg
+        buttons_enabled['new_game_vs_other'] = False
 
     return messages, lines_to_display, buttons_enabled, previous_guesses, previous_guesses_other, other_guess_state
 

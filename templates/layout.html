@@ -45,7 +45,7 @@
                     <br><br>
                     <input type="submit" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
                     <input type="submit" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
-                    <input type="submit" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
+                    <input type="submit" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
                     <br><br>
                     {%- for line_id, pre, word, post in displayed_lines %}
                     <input type="hidden" name="displayed_lines[]" value="{{ line_id }}">
