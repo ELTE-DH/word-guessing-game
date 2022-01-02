@@ -25,14 +25,15 @@ def create_context_main(inp_fh=sys.stdin, out_fh=sys.stdout,
     ngram_len = left_cont_len + 1 + right_cont_len
     right_cont_index = left_cont_len + 1
     for line in inp_fh:
-        line = line.rstrip().split(' ')
-        for entry in n_gram_iter(line, ngram_len):
+        line_stripped = line.rstrip()
+        line_splitted = line_stripped.split(' ')
+        for entry in n_gram_iter(line_splitted, ngram_len):
             pre = entry[:left_cont_len]
             word = entry[left_cont_len]
             post = entry[right_cont_index:]
             if word_min_len <= len(word) <= word_max_len and LOWERCASE_LETTERS_HUN.issuperset(word) and \
                     word not in NON_WORDS:
-                print(word, ' '.join(pre), ' '.join(post), sep='\t', file=out_fh)
+                print(word, ' '.join(pre), ' '.join(post), line_stripped, sep='\t', file=out_fh)
 
 
 if __name__ == '__main__':

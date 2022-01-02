@@ -4,14 +4,14 @@ all: webcorpus1 # webcorpus2
 webcorpus1:
 	make download_webcorpus1 extract_webcorpus1 filter count ballance venv sample \
         FILTER_FINAL_SUM?="e9a1c810bb7e652828a70be313079f2b3c271fe5453cb563575531be5e5feb48" \
-        CONTS_FILTERED_SUM?="819e6c2d24260bba1f6b412bab59490bbd7f8f02d3cc90b2eeac0d76380d4f9d" \
-        BALLANCED_CONTS?="db429eed984a05e779d5c5b462aa16fdbc4ce4387b1083d5c4ced14b9ab30db5"
+        CONTS_FILTERED_SUM?="e75e1fe9c28a8d60a8356f77b7c9e0b71d609cf33438cebe279a771918d94b39" \
+        BALLANCED_CONTS?="d2ccb4e29a4a3fc632f342f2f8662ef045f6dd4a18e33836adf4be29f99e163b"
 
 webcorpus2:
 	make download_webcorpus2 extract_webcorpus2 filter count ballance venv sample \
         FILTER_FINAL_SUM?="64b1c8db9990e776652ca2f0d05af478dbae0919ca3acd289595c9662584b5da" \
-        CONTS_FILTERED_SUM?="ccbb9ab3af1dc6cb27dde64d567fab331b12940ad6fb5001e609676e41e0e5db" \
-        BALLANCED_CONTS?="8a717797c7fa189a55fed368d175a29516ff8f7302299057422d57f204bb114c"
+        CONTS_FILTERED_SUM?="f98bf6d47468326fc099e7fed8311acf6c219d71bbca2c0c981cc14437aedd6f" \
+        BALLANCED_CONTS?="9995672be3260085f75d27b3972883b53d3d9bcb49aea21af8afce8054f64cf5"
 
 prevcons:
 	make download_prevcons process_prevcons
@@ -86,12 +86,12 @@ count: filter_final.txt.gz
         pigz -n > conts_filtered.txt.gz
 	@echo "$(CONTS_FILTERED_SUM) conts_filtered.txt.gz" | sha256sum -c - || exit 1
 	@# Webcorpus 1.0:
-	@# About 6 minutes
+	@# About 10 minutes
 	@# Words (to be guessed): 127 350
 	@# Contexts: 63 566 600
 	@#
 	@# Webcorpus 2.0:
-	@# About 137 minutes
+	@# About 240 minutes
 	@# Words (to be guessed): 653 813
 	@# Contexts: 923 223 806
 
@@ -101,12 +101,12 @@ ballance: conts_filtered.txt.gz
         pigz -n > ballanced_conts.txt.gz
 	echo "$(BALLANCED_CONTS) ballanced_conts.txt.gz" | sha256sum -c - || exit 1
 	@# Webcorpus 1.0:
-	@# About 2 minutes
+	@# About 3 minutes
 	@# Words (to be guessed): 127 350
 	@# Contexts: 3 820 500
 	@#
 	@# Webcorpus 2.0:
-	@# About 24 minutes
+	@# About 42 minutes
 	@# Words (to be guessed): 653 813
 	@# Contexts: 19 614 390
 

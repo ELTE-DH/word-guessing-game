@@ -17,7 +17,8 @@ def create_db(db_fn):
                          Column('left', String),
                          Column('word', String, index=True),
                          Column('right', String),
-                         Column('freq', Integer))
+                         Column('freq', Integer),
+                         Column('sent', String))
     metadata.create_all(engine)
 
     return engine, sqlite_table
@@ -46,8 +47,8 @@ def do_insert(row_gen, engine, sqlite_table, chunksize=100000):
 def gen_rows(inp_fh=sys.stdin):
     for line in inp_fh:
         line = line.rstrip()
-        word, left, right, freq = line.split('\t', maxsplit=3)
-        yield {'left': left, 'word': word, 'right': right, 'freq': int(freq)}
+        word, left, right, sent, freq = line.split('\t', maxsplit=4)
+        yield {'left': left, 'word': word, 'right': right, 'freq': int(freq), 'sent': sent}
 
 
 def parse_args():
