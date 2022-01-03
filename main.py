@@ -3,10 +3,13 @@
 
 import os
 import sys
+from uuid import uuid4
+from logging.config import dictConfig
 
+from yaml import load as yaml_load
 from flask_sqlalchemy import SQLAlchemy
 from yamale import make_schema, make_data, validate, YamaleError
-from flask import request, flash, Flask, render_template, current_app
+from flask import request, flash, session, Flask, render_template, current_app
 
 from context_bank import ContextBank
 from guesser_helper import word_similarity, dummy_similarity_fun, guess
@@ -60,6 +63,10 @@ def create_app(config_filename='config.yaml'):
     config = load_and_validate_config(config_filename)
     validate_config_special(config)
 
+    # Read logging configuration
+    with open('logging.cfg') as fh:
+        dictConfig(yaml_load(fh))
+
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
     flask_app.config.from_mapping(APP_SETTINGS=config,
@@ -88,6 +95,16 @@ def create_app(config_filename='config.yaml'):
         settings = current_app.config['APP_SETTINGS']
         # Parse parameters and put errors into messages if necessary
         messages, next_action, displayed_line_ids, this_player, other_player = parse_params(settings['ui_strings'])
+
+        # Create random session id to identify users
+        if 'id' not in session:
+            session['id'] = uuid4()
+        # Log parameters and URL query string
+        all_guesses = this_player[0][:]
+        all_guesses.append(this_player[1])
+        current_app.logger.info(
+            '\t'.join(map(str, (session['id'], next_action, displayed_line_ids, all_guesses,
+                                request.query_string.decode()))))
 
         # Execute one step in the game if there were no errors, else do nothing
         messages, displayed_lines, buttons_enabled, prev_guesses_this, prev_guesses_other, other_guess_state = \
