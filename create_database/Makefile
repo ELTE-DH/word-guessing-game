@@ -4,8 +4,8 @@ all: webcorpus1 # webcorpus2
 webcorpus1:
 	make download_webcorpus1 extract_webcorpus1 filter count ballance venv sample \
         FILTER_FINAL_SUM?="e9a1c810bb7e652828a70be313079f2b3c271fe5453cb563575531be5e5feb48" \
-        CONTS_FILTERED_SUM?="e75e1fe9c28a8d60a8356f77b7c9e0b71d609cf33438cebe279a771918d94b39" \
-        BALLANCED_CONTS?="d2ccb4e29a4a3fc632f342f2f8662ef045f6dd4a18e33836adf4be29f99e163b"
+        CONTS_FILTERED_SUM?="0795716d95ef976fc5e8b1577a0082cde7d00f4d19687ac49bf3e2473917bee4" \
+        BALLANCED_CONTS?="54d7333e1e5627f8d14e8a5f93c07d5cd1912ec208be78b57141cfb41659d19c"
 
 webcorpus2:
 	make download_webcorpus2 extract_webcorpus2 filter count ballance venv sample \
@@ -82,7 +82,7 @@ count: filter_final.txt.gz
 	@# 4. Count lines (as uniq -c) based on the first field (TAB separated) and print only groups larger than
 	@#	 the specified limit ($5)
 	mkdir -p ~/tmp
-	export LC_ALL="C.UTF-8" && pigz -cd filter_final.txt.gz | ./create_and_count_contexts.sh 5 5 4 50 30 | \
+	export LC_ALL="C.UTF-8" && pigz -cd filter_final.txt.gz | ./create_and_count_contexts.sh 8 8 4 50 30 | \
         pigz -n > conts_filtered.txt.gz
 	@echo "$(CONTS_FILTERED_SUM) conts_filtered.txt.gz" | sha256sum -c - || exit 1
 	@# Webcorpus 1.0:
@@ -96,8 +96,8 @@ count: filter_final.txt.gz
 	@# Contexts: 923 223 806
 
 ballance: conts_filtered.txt.gz
-	@# Select $1 random contexts for each word to ballance frequent and rare words
-	export LC_ALL="C.UTF-8" && pigz -cd conts_filtered.txt.gz | python3 ballance_freqs.py -n 30 | \
+	@# Select $1 random contexts + truncations with unique elements (left, right, word, sent) (use freq for sent id)
+	export LC_ALL="C.UTF-8" && pigz -cd conts_filtered.txt.gz | python3 ballance_freqs.py -n 500 | \
         pigz -n > ballanced_conts.txt.gz
 	echo "$(BALLANCED_CONTS) ballanced_conts.txt.gz" | sha256sum -c - || exit 1
 	@# Webcorpus 1.0:
@@ -117,7 +117,6 @@ venv:
 sample: ./venv/bin/pip ballanced_conts.txt.gz
 	@# Sample from the ballanced dataset for portability (8000 words with 30 context each yield a 30 MB SQLite DB)
 	export LC_ALL="C.UTF-8" && rm -rf webcorpus_conts.db && pigz -cd ballanced_conts.txt.gz | \
-        python3 random_sampling_filter.py -k 8000 -c $$(pigz -cd ballanced_conts.txt.gz | cut -f1 | uniq | wc -l) | \
         ./venv/bin/python3 create_sqldb.py -f webcorpus_conts.db
 	@# For both Webcorpus 1.0 and 2.0:
 	@# About a few minutes
