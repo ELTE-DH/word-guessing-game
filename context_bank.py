@@ -1,4 +1,4 @@
-from random import randrange, shuffle
+from random import randrange, shuffle, choice
 
 from sqlalchemy.orm import Session
 from sqlalchemy import func, Table, create_engine, MetaData
@@ -31,7 +31,7 @@ class ContextBank:
         self._left_obj = col_objs[db_config['left_name']]
         self._word_obj = col_objs[db_config['word_name']]
         self._right_obj = col_objs[db_config['right_name']]
-        self._freq = col_objs[db_config['freq_name']]
+        self._freq_obj = col_objs[db_config['freq_name']]
 
         if left_size < 0:
             left_size = 1_000_000  # Extremely big to include full sentence
@@ -65,7 +65,7 @@ class ContextBank:
             filter(self._word_obj == word)
         for line_id, left, word, right in all_lines_for_word_query.all():
             word = hide_fun(word)
-            left_truncated, right_truncated = self._truncate_context(left, right)
+            left_truncated, right_truncated = left, right  # self._truncate_context(left, right)
 
             if line_id in displayed_lines_set:
                 lines_to_display[line_id] = [line_id, left_truncated, word, right_truncated]
@@ -85,28 +85,40 @@ class ContextBank:
         right_truncated = ' '.join(right_split[:min(self._right_size, len(right_split))])
         return left_truncated, right_truncated
 
-    def select_one_random_line(self):
+    def select_one_random_line(self, prev_sents):
         """Select one random line from all available lines
             Raises sqlalchemy.orm.exc.NoResultFound if the query selects no rows
             Raises sqlalchemy.orm.exc.MultipleResultsFound if multiple rows are returned
         """
 
-        random_line_id = self._get_random_line_id()
+        random_line_id = self._get_random_line_id(prev_sents)
+        if random_line_id is None:
+            return None
 
         # Retrieve data for that specific line
         entry_query = self._session.query(self._table_obj). \
             with_entities(self._id_obj, self._left_obj, self._word_obj, self._right_obj). \
             filter(self._id_obj == random_line_id)
         line_id, left, word, right = entry_query.one()
-        left_truncated, right_truncated = self._truncate_context(left, right)
+        left_truncated, right_truncated = left, right  # self._truncate_context(left, right)
 
         return [[line_id, left_truncated, self._hide_word(word), right_truncated]]
 
-    def _get_random_line_id(self):
+    def _get_random_line_id(self, prev_sents=()):
         """Select a random id (line_id) from the table"""
-        row_count_query = self._session.query(func.count(self._id_obj))
-        row_count = row_count_query.scalar()
-        random_line_id = randrange(row_count) + 1
+        entry_query = self._session.query(self._table_obj). \
+            with_entities(self._id_obj, self._freq_obj)
+        line_id_freq_pairs = [(line_id, freq) for line_id, freq in entry_query.all()]
+
+        prev_sents = set(prev_sents)
+        prev_freqs = {freq for line_id, freq in line_id_freq_pairs if line_id in prev_sents}
+        available_line_ids = []
+        for line_id, freq in line_id_freq_pairs:
+            if freq not in prev_freqs:
+                available_line_ids.append(line_id)
+        if len(available_line_ids) == 0:
+            return None
+        random_line_id = choice(available_line_ids)
 
         return random_line_id
 
@@ -127,7 +139,7 @@ class ContextBank:
         """
 
         word_query = self._session.query(self._table_obj). \
-            with_entities(self._word_obj, self._freq). \
+            with_entities(self._word_obj, self._freq_obj). \
             filter(self._id_obj == one_line_id)
         word, freq = word_query.one()
 

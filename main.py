@@ -6,7 +6,7 @@ import sys
 from uuid import uuid4
 from logging.config import dictConfig
 
-from yaml import load as yaml_load
+from yaml import safe_load as yaml_load
 from flask_sqlalchemy import SQLAlchemy
 from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, session, Flask, render_template, current_app
@@ -94,7 +94,8 @@ def create_app(config_filename='config.yaml'):
 
         settings = current_app.config['APP_SETTINGS']
         # Parse parameters and put errors into messages if necessary
-        messages, next_action, displayed_line_ids, this_player, other_player = parse_params(settings['ui_strings'])
+        messages, next_action, displayed_line_ids, this_player, other_player, prev_sents = \
+            parse_params(settings['ui_strings'])
 
         # Create random session id to identify users
         if 'id' not in session:
@@ -107,9 +108,10 @@ def create_app(config_filename='config.yaml'):
                                 request.query_string.decode()))))
 
         # Execute one step in the game if there were no errors, else do nothing
-        messages, displayed_lines, buttons_enabled, prev_guesses_this, prev_guesses_other, other_guess_state = \
+        messages, displayed_lines, buttons_enabled, prev_guesses_this, prev_guesses_other, other_guess_state, \
+            prev_sents = \
             game_logic(messages, next_action, displayed_line_ids, this_player, other_player,
-                       settings['guesser_config'], settings['ui_strings'], settings['context_bank'])
+                       settings['guesser_config'], settings['ui_strings'], settings['context_bank'], prev_sents)
 
         # Display messages (errors and informational ones)
         for m in messages:
@@ -118,7 +120,8 @@ def create_app(config_filename='config.yaml'):
         # Render output HTML
         out_content = render_template('layout.html', ui_strings=settings['ui_strings'], buttons_enabled=buttons_enabled,
                                       previous_guesses=prev_guesses_this, previous_guesses_other=prev_guesses_other,
-                                      displayed_lines=displayed_lines, other_guess_state=other_guess_state)
+                                      displayed_lines=displayed_lines, other_guess_state=other_guess_state,
+                                      prev_sents=prev_sents)
         return out_content
 
     return flask_app
@@ -159,16 +162,19 @@ def parse_params(ui_strings):
         next_action = 'new_game'
         other_guess_state = '0'
 
+    prev_sents = request.args.getlist('ps[]', int)
+
     return messages, next_action, displayed_line_ids, (prev_guesses, guessed_word), \
-        (prev_guesses_other, other_guess_state)
+        (prev_guesses_other, other_guess_state), prev_sents
 
 
-def game_logic(messages, action, displayed_lines, this_player, other_player, guesser_config, ui_strings, context_bank):
+def game_logic(messages, action, displayed_lines, this_player, other_player, guesser_config, ui_strings, context_bank,
+               prev_sents):
     """The main logic of the game"""
     previous_guesses, guessed_word = this_player
     previous_guesses_other, other_guess_state = other_player
 
-    buttons_enabled = {'guess': True, 'next_line': True, 'give_up': True, 'new_game': True}
+    buttons_enabled = {'guess': True, 'next_line': True, 'give_up': True, 'new_game': False}
 
     if len(messages) > 0 or action is None:
         # There were errors
@@ -185,6 +191,11 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
             hide_word = True
             messages.append(ui_strings['incorrect_guess'])
             previous_guesses.append(guessed_word)
+            if len(previous_guesses) == 10:
+                # No more guesses allowed
+                buttons_enabled = {'guess': False, 'next_line': False, 'give_up': False, 'new_game': True}
+                messages.append(ui_strings['incorrect_guess'])
+                messages.append(ui_strings['no_more_guess'])
 
         lines_to_display, _ = context_bank.read_all_lines_for_word(word, displayed_lines, hide_word=hide_word)
 
@@ -221,7 +232,11 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
         # Select a random line
         previous_guesses.clear()
         previous_guesses_other.clear()
-        lines_to_display = context_bank.select_one_random_line()
+        lines_to_display = context_bank.select_one_random_line(prev_sents)
+        if lines_to_display is not None:
+            prev_sents.append(lines_to_display[0][0])
+        else:
+            messages.append(ui_strings['no_more_sent'])
     else:
         raise NotImplementedError('Nonsense state!')
 
@@ -239,7 +254,8 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
         previous_guesses = new_pg
         buttons_enabled['new_game_vs_other'] = False
 
-    return messages, lines_to_display, buttons_enabled, previous_guesses, previous_guesses_other, other_guess_state
+    return messages, lines_to_display, buttons_enabled, previous_guesses, previous_guesses_other, other_guess_state, \
+        prev_sents
 
 
 # Create an app instance for later usage

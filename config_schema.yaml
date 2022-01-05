@@ -30,6 +30,8 @@ ui_strings:
     no_action_specified: str(none=False)
     win: str(none=False)
     incorrect_guess: str(none=False)
+    no_more_guess: str(none=False)
+    no_more_sent: str(none=False)
     no_more_line_for_word: str(none=False)
     other_win: str(none=False)
     other_gave_up: str(none=False)

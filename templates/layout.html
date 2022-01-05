@@ -37,15 +37,16 @@
                         {%- endfor %}
                     </ul>
                 {% endif -%}
+                {%- for sent_id in prev_sents %}
+                <input type="hidden" name="ps[]" value="{{ sent_id }}">
+                {%- endfor %}
                 </div>
                 <div style="text-align: center; overflow: hidden; display:table-cell; width: 60%;">
-                    <label for="guessed_word">Tipp: </label><input type="text" name="guessed_word" id="guessed_word" {% if not buttons_enabled.guess %}disabled{%endif%}>
+                    <label for="guessed_word">Tipp: </label><input autofocus type="text" name="guessed_word" id="guessed_word" {% if not buttons_enabled.guess %}disabled{%endif%}>
                     <input type="submit" name="guess" value="{{ ui_strings.guess }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
-                    <input type="submit" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
                     <br><br>
                     <input type="submit" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
                     <input type="submit" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
-                    <input type="submit" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
                     <br><br>
                     {%- for line_id, pre, word, post in displayed_lines %}
                     <input type="hidden" name="displayed_lines[]" value="{{ line_id }}">
@@ -63,7 +64,6 @@
                     </table>
                 </div>
                 <div style="text-align: left; display:table-cell; width: 15%;">
-                <input type="hidden" name="other_guess_state" value="{{ other_guess_state }}">
                 {% if previous_guesses_other|length > 0 -%}
                     {{ ui_strings.previous_guesses_other }}:
                     {%- for word, similarity in previous_guesses_other %}

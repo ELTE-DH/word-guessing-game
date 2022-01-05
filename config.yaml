@@ -30,16 +30,17 @@ ui_strings:
     no_action_specified: Hiányzó paraméter (a kövekező lépés) !
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
+    no_more_guess: Nincs több lehetőség találgatni! :(
     no_more_line_for_word: Nincs több sor! :(
+    no_more_sent: Nincs több! Köszönjük, hogy végigcsináltad! :)
     other_win: A BERT eltalálta!
     other_gave_up: A BERT feladta!
     other_guess_state_invalid: Nem megfelelő paraméterérték (other_guess_state) !
     error: Hiba történt
-    footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)</p>
+    footer: <p>Találd ki a szót! Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával!</p>
             <br>
-            <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>
-            <p>Adatbázis:\ Nekeskey Dávid Márk – <a href="https://hlt.bme.hu/hu/resources/webcorpus2">Magyar Webkorpusz 2.0</a></p>
-            <p>A Magyar Webkorpusz 2.0 felhasználása esetén az alábbi publikáció hivatkozandó:</p>
-            <ul>
-                <li><a href="https://hlt.bme.hu/media/pdf/nemeskey_thesis.pdf">Nemeskey, Dávid Márk (2020). “Natural Language Processing methods for Language Modeling”. PhD thesis. Eötvös Loránd University.</a></li>
-            </ul>
+            <p>Maximum 10 tippet lehet írni mondatonként!</p>
+            <p>Egér nélkül is játszható. A fókusz a beviteli mezőn van, tab-bal lehet a tipp gombra ugrani két tabbal a feladásra utána egy tabbal az új játékra!</p>       
+            <p>Összesen 500 mondat van, köszönjük ha rászánod az időt és az összeset végigcsinálod!</p>  
+            <p>Ha félbe akarod hagyni két játék között tedd, amikor feladtad vagy kitaláltad, de még nem nyomtál az "Új játék" gombra"!</p>
+            <p>Kérünk, mentsd el az URL-t és azzal folytasd, hogy ne kezdődjön újra a teszt!</p>
