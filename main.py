@@ -6,7 +6,7 @@ import sys
 from uuid import uuid4
 from logging.config import dictConfig
 
-from yaml import load as yaml_load
+from yaml import load as yaml_load, SafeLoader
 from flask_sqlalchemy import SQLAlchemy
 from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, session, Flask, render_template, current_app
@@ -65,7 +65,7 @@ def create_app(config_filename='config.yaml'):
 
     # Read logging configuration
     with open('logging.cfg') as fh:
-        dictConfig(yaml_load(fh))
+        dictConfig(yaml_load(fh, SafeLoader))
 
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
