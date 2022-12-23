@@ -38,12 +38,12 @@ If you use this program, please cite the following paper:
 
 ```
 @inproceedings{word-guessing-mszny2022,
-	author = {Indig, Balázs and Lévai, Dániel},
-	booktitle = {{XVIII}. {M}agyar {S}zámítógépes {N}yelvészeti {K}onferencia},
-	title = {Okosabb vagy, mint egy {XXXXXXXX}? -- Egy nyelvi játéktól a nyelvmodellek összehasonlításáig},
-	year = {2022},
-	editor = {Gábor Berend and Gábor Gosztolya and Veronika Vincze},
-	pages = {31--44},
-	orcid-numbers = {Indig, Balázs/0000-0001-8090-3661}
+    author = {Indig, Balázs and Lévai, Dániel},
+    booktitle = {{XVIII}. {M}agyar {S}zámítógépes {N}yelvészeti {K}onferencia},
+    title = {Okosabb vagy, mint egy {XXXXXXXX}? -- Egy nyelvi játéktól a nyelvmodellek összehasonlításáig},
+    year = {2022},
+    editor = {Gábor Berend and Gábor Gosztolya and Veronika Vincze},
+    pages = {31--44},
+    orcid-numbers = {Indig, Balázs/0000-0001-8090-3661}
 }
 ```

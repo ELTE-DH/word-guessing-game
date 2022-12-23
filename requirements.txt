@@ -1,6 +1,6 @@
 sqlalchemy
 flask
-flask_sqlalchemy
+flask_sqlalchemy<3.0.0
 werkzeug
 jinja2
 gunicorn

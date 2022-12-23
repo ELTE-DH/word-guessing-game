@@ -71,7 +71,7 @@ def create_app(config_filename='config.yaml'):
     flask_app = Flask('word-guessing-game')
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
-                                  SQLALCHEMY_DATABASE_URI='sqlite:///{0}'.format(config['db_config']['database_name']),
+                                  SQLALCHEMY_DATABASE_URI=f'sqlite:///{config["db_config"]["database_name"]}',
                                   SQLALCHEMY_TRACK_MODIFICATIONS=False,
                                   # JSONIFY_PRETTYPRINT_REGULAR=True,
                                   # JSON_AS_ASCII=False,
@@ -79,8 +79,7 @@ def create_app(config_filename='config.yaml'):
     app_settings = flask_app.config['APP_SETTINGS']
 
     # Setup SQLAlchemy database for pythonic usage (column obj to name mapping)
-    db = SQLAlchemy()
-    db.init_app(flask_app)
+    db = SQLAlchemy(flask_app)
     with flask_app.app_context():
         left_size = config['contextbank_config']['left_size']
         right_size = config['contextbank_config']['right_size']
