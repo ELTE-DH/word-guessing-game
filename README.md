@@ -3,7 +3,7 @@
 A [Cloze test-like](https://en.wikipedia.org/wiki/Cloze_test) game based on
  the idea of the "Nyelvi Játék" by [MorphoLogic Kft.](https://www.morphologic.hu/) on a new, different code base.
 
-A sample instance is running at: https://word-concordance-game.herokuapp.com/
+A sample instance is running at: https://word-concordance-game.onrender.com/
 
 # Installation
 
