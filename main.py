@@ -6,7 +6,7 @@ import sys
 from uuid import uuid4
 from logging.config import dictConfig
 
-from yaml import load as yaml_load, SafeLoader
+from yaml import safe_load as yaml_load
 from flask_sqlalchemy import SQLAlchemy
 from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, session, Flask, render_template, current_app
@@ -65,7 +65,7 @@ def create_app(config_filename='config.yaml'):
 
     # Read logging configuration
     with open('logging.cfg') as fh:
-        dictConfig(yaml_load(fh, SafeLoader))
+        dictConfig(yaml_load(fh))
 
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
@@ -175,7 +175,7 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
     previous_guesses, guessed_word = this_player
     previous_guesses_other, other_guess_state = other_player
 
-    buttons_enabled = {'guess': True, 'next_line': True, 'give_up': True, 'new_game': True}
+    buttons_enabled = {'guess': True, 'next_line': True, 'give_up': True, 'new_game': False}
 
     if len(messages) > 0 or action is None:
         # There were errors
