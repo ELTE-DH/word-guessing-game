@@ -16,6 +16,9 @@ The required minimum Python version is 3.6.
 
 # Recreating the database
 
+- __NOTE__: One can use the previously created example databases in: [example_databases](example_databases) directory.
+- __NOTE2__: The following scripts do reproducible processing of the corpora, see [ballance_freqs.py](create_database/ballance_freqs.py) to modify the fixed random seed if needed!
+
 1. `cd create_database`
 2. `make webcorpus1` XOR `make webcorpus2`
 3. Setup the database in [`config.yaml`](config.yaml) (`database_name` key in `db_config`)

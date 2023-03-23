@@ -38,8 +38,9 @@ ui_strings:
     footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)</p>
             <br>
             <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>
-            <p>Adatbázis:\ Nekeskey Dávid Márk – <a href="https://hlt.bme.hu/hu/resources/webcorpus2">Magyar Webkorpusz 2.0</a></p>
-            <p>A Magyar Webkorpusz 2.0 felhasználása esetén az alábbi publikáció hivatkozandó:</p>
+            <p>Adatbázis:\ Kornai András et al. – <a href="http://mokk.bme.hu/resources/webcorpus/">Magyar Webkorpusz</a></p>
+            <p>A Magyar Webkorpusz felhasználása esetén az alábbi publikációk legalább egyike hivatkozandó:</p>
             <ul>
-                <li><a href="https://hlt.bme.hu/media/pdf/nemeskey_thesis.pdf">Nemeskey, Dávid Márk (2020). “Natural Language Processing methods for Language Modeling”. PhD thesis. Eötvös Loránd University.</a></li>
+                <li><a href="https://aclanthology.org/W06-1701/">András Kornai, Péter Halácsy, Viktor Nagy, Csaba Oravecz, Viktor Trón, and Dániel Varga. 2006. Web-based frequency dictionaries for medium density languages. In Proceedings of the 2nd International Workshop on Web as Corpus.</a></li>
+                <li><a href="https://aclanthology.org/L04-1320/">Péter Halácsy, András Kornai, László Németh, András Rung, István Szakadát, and Viktor Trón. 2004. Creating Open Language Resources for Hungarian. In Proceedings of the Fourth International Conference on Language Resources and Evaluation (LREC’04), Lisbon, Portugal. European Language Resources Association (ELRA).</a></li>
             </ul>

@@ -1,0 +1,45 @@
+db_config:
+    database_name: webcorpus2_conts.db
+    table_name: lines
+    id_name: id
+    left_name: left
+    word_name: word
+    right_name: right
+    freq_name: freq
+contextbank_config:
+    left_size: 5
+    right_size: 5
+    hide_char: X
+guesser_config:
+    baseurl: null
+    guesser: null
+    similarity: null
+    retry_wrong: null
+    top_n: null
+ui_strings:
+    title: Szókitaláló játék
+    guess: Tipp
+    give_up: Szabad a gazda
+    next_line: Még egy sor
+    new_game: Új játék
+    new_game_vs_other: Új játék a BERT ellen
+    previous_guesses: Eddigi tippek
+    previous_guesses_other: A BERT eddigi tippjei
+    no_guessed_word_specified: Hiányzó paraméter (a tippelt szó) !
+    no_displayed_lines_specified: Hiányzó paraméter (a megjelenített sorok azonosítói) !
+    no_action_specified: Hiányzó paraméter (a kövekező lépés) !
+    win: Eltaláltad! :)
+    incorrect_guess: Nem talált! :(
+    no_more_line_for_word: Nincs több sor! :(
+    other_win: A BERT eltalálta!
+    other_gave_up: A BERT feladta!
+    other_guess_state_invalid: Nem megfelelő paraméterérték (other_guess_state) !
+    error: Hiba történt
+    footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)</p>
+            <br>
+            <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>
+            <p>Adatbázis:\ Nekeskey Dávid Márk – <a href="https://hlt.bme.hu/hu/resources/webcorpus2">Magyar Webkorpusz 2.0</a></p>
+            <p>A Magyar Webkorpusz 2.0 felhasználása esetén az alábbi publikáció hivatkozandó:</p>
+            <ul>
+                <li><a href="https://hlt.bme.hu/media/pdf/nemeskey_thesis.pdf">Nemeskey, Dávid Márk (2020). “Natural Language Processing methods for Language Modeling”. PhD thesis. Eötvös Loránd University.</a></li>
+            </ul>
