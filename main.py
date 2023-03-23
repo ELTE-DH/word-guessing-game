@@ -114,10 +114,18 @@ def create_app(config_filename='config.yaml'):
         for m in messages:
             flash(m)
 
+        if len(displayed_lines) > 0:
+            word_length = len(displayed_lines[0][2])
+            word_length_str = f'({len(displayed_lines[0][2])})'
+        else:
+            word_length = 0
+            word_length_str = ''
+
         # Render output HTML
         out_content = render_template('layout.html', ui_strings=settings['ui_strings'], buttons_enabled=buttons_enabled,
                                       previous_guesses=prev_guesses_this, previous_guesses_other=prev_guesses_other,
-                                      displayed_lines=displayed_lines, other_guess_state=other_guess_state)
+                                      displayed_lines=displayed_lines, other_guess_state=other_guess_state,
+                                      word_length_str=word_length_str, word_length=word_length)
         return out_content
 
     return flask_app

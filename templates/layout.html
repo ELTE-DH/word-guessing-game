@@ -3,6 +3,19 @@
     <head>
         <title>{{ui_strings.title}}</title>
         <meta charset="utf-8">
+        <script>
+        function change() {
+
+            var text = document
+                .getElementById("guessed_word").value;
+            var wordLength = {{- word_length -}} - text.length;
+
+            var butt = document.getElementById("guess");
+            if (! butt.disabled)
+                butt.textContent = "{{ ui_strings.guess }} (" + wordLength + ")";
+                butt.value = "{{ ui_strings.guess }} (" + wordLength + ")";
+        }
+    </script>
     </head>
     <body>
         {% with messages = get_flashed_messages() -%}
@@ -39,8 +52,8 @@
                 {% endif -%}
                 </div>
                 <div style="text-align: center; overflow: hidden; display:table-cell; width: 60%;">
-                    <label for="guessed_word">Tipp: </label><input type="text" name="guessed_word" id="guessed_word" {% if not buttons_enabled.guess %}disabled{%endif%}>
-                    <input type="submit" name="guess" value="{{ ui_strings.guess }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
+                    <label for="guessed_word">Tipp: </label><input autofocus onchange="change();" onkeypress="change();" onpaste="change();" oninput="change();" type="text" name="guessed_word" id="guessed_word" {% if not buttons_enabled.guess %}disabled{%endif%}>
+                    <input type="submit" name="guess" id="guess" value="{{ ui_strings.guess }} {{ word_length_str }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
                     <input type="submit" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
                     <br><br>
                     <input type="submit" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
