@@ -3,8 +3,8 @@
 A [Cloze test-like](https://en.wikipedia.org/wiki/Cloze_test) game based on
  the idea of the "Nyelvi Játék" by [MorphoLogic Kft.](https://www.morphologic.hu/) on a new, different code base.
 
-Multiple samples instance are running at:
-- Webcorpus1 (Hungarian): https://word-concordance-game.onrender.com/
+Multiple sample instances are running at:
+- Webcorpus 1.0 (Hungarian): https://word-concordance-game.onrender.com/
 - PrevCons (Hungarian): https://prev-guessing-game.onrender.com/
 - OSCAR 2019 Polish deduplicated (Polish): https://polish-guessing-game.onrender.com/
 
