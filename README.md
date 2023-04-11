@@ -3,7 +3,10 @@
 A [Cloze test-like](https://en.wikipedia.org/wiki/Cloze_test) game based on
  the idea of the "Nyelvi Játék" by [MorphoLogic Kft.](https://www.morphologic.hu/) on a new, different code base.
 
-A sample instance is running at: https://word-concordance-game.onrender.com/
+Multiple samples instance are running at:
+- Webcorpus1 (Hungarian): https://word-concordance-game.onrender.com/
+- PrevCons (Hungarian): https://prev-guessing-game.onrender.com/
+- OSCAR 2019 Polish deduplicated (Polish): https://polish-guessing-game.onrender.com/
 
 # Installation
 
@@ -11,7 +14,7 @@ The required minimum Python version is 3.6.
 
 1. Clone the repository
 2. `pip install -r requirements.txt`
-3. Setup the database in [`config.yaml`](config.yaml) (`database_name` key in `db_config`)
+3. Setup the database and configuration ([see examples](example_databases)).
 4. `python main.py`
 
 # Recreating the database
@@ -30,7 +33,7 @@ This project is licensed under the terms of the GNU LGPL 3.0 license.
 # Acknowledgement
 
 The authors gratefully acknowledge the groundbreaking work of all pioneers who inspired this program. <br>
-We wish to thank to the employees of _MorphoLogic Kft.__ who created this program. <br>
+We wish to thank to the employees of _MorphoLogic Kft._ who created this program. <br>
 We also thank to the publishers of both Webcorpus versions for making their corpus publicly available.
 
 # References

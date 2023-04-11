@@ -134,7 +134,6 @@ dmypy.json
 
 # Repo specific stuff
 create_database/PrevCons.sqlite3
-create_database/orig_webcorpus1/
-create_database/orig_webcorpus2/
+create_database/orig_*/
 create_database/*.txt.gz
 create_database/*.db
