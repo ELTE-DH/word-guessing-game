@@ -1,5 +1,5 @@
 db_config:
-    database_name: webcorpus1_conts.db
+    database_name: pl_oscar_2019_dedup_conts.db
     table_name: lines
     id_name: id
     left_name: left
@@ -17,30 +17,29 @@ guesser_config:
     retry_wrong: null
     top_n: null
 ui_strings:
-    title: Szókitaláló játék
-    guess: Tipp
-    give_up: Szabad a gazda
-    next_line: Még egy sor
-    new_game: Új játék
-    new_game_vs_other: Új játék a BERT ellen
-    previous_guesses: Eddigi tippek
-    previous_guesses_other: A BERT eddigi tippjei
-    no_guessed_word_specified: Hiányzó paraméter (a tippelt szó) !
-    no_displayed_lines_specified: Hiányzó paraméter (a megjelenített sorok azonosítói) !
-    no_action_specified: Hiányzó paraméter (a kövekező lépés) !
-    win: Eltaláltad! :)
-    incorrect_guess: Nem talált! :(
-    no_more_line_for_word: Nincs több sor! :(
-    other_win: A BERT eltalálta!
-    other_gave_up: A BERT feladta!
-    other_guess_state_invalid: Nem megfelelő paraméterérték (other_guess_state) !
-    error: Hiba történt
-    footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.)</p>
+    title: Word guessing game
+    guess: Guess
+    give_up: Give up
+    next_line: Add a line
+    new_game: New game
+    new_game_vs_other: New game against BERT
+    previous_guesses: Previous guesses
+    previous_guesses_other: Previous guesses from BERT
+    no_guessed_word_specified: Missing parameter (guessed word) !
+    no_displayed_lines_specified: Missing parameter (the ids of the displayed lines) !
+    no_action_specified: Missing parameter (the next action) !
+    win: You guessed it! :)
+    incorrect_guess: Incorrect guess! :(
+    no_more_line_for_word: No more lines! :(
+    other_win: BERT guessed it!
+    other_gave_up: BERT gave up!
+    other_guess_state_invalid: Incorrect parameter value (other_guess_state) !
+    error: An error occurred
+    footer: <p>Guess the word in as few lines as possible! X characters hide the same word with contexts taken from different sentences.<br>(The number of X characters is the same as the number of characters in the word to be guessed.)</p>
             <br>
-            <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>
-            <p>Adatbázis:\ Kornai András et al. – <a href="http://mokk.bme.hu/resources/webcorpus/">Magyar Webkorpusz</a></p>
-            <p>A Magyar Webkorpusz felhasználása esetén az alábbi publikációk legalább egyike hivatkozandó:</p>
+            <p>The code running below the page is based on the operation of <em>Language game © MorphoLogic, 2000</em>, with an independent codebase.</p>
+            <p>Database:\ Ortiz Suárez et al. – <a href="https://oscar-project.github.io/documentation/versions/oscar-2019/">OSCAR 2019 polish deduplicated corpus</a></p>
+            <p>When using the underlying corpus, the following publication must be cited:</p>
             <ul>
-                <li><a href="https://aclanthology.org/W06-1701/">András Kornai, Péter Halácsy, Viktor Nagy, Csaba Oravecz, Viktor Trón, and Dániel Varga. 2006. Web-based frequency dictionaries for medium density languages. In Proceedings of the 2nd International Workshop on Web as Corpus.</a></li>
-                <li><a href="https://aclanthology.org/L04-1320/">Péter Halácsy, András Kornai, László Németh, András Rung, István Szakadát, and Viktor Trón. 2004. Creating Open Language Resources for Hungarian. In Proceedings of the Fourth International Conference on Language Resources and Evaluation (LREC’04), Lisbon, Portugal. European Language Resources Association (ELRA).</a></li>
+                <li><a href="https://aclanthology.org/2020.acl-main.156/">Pedro Javier Ortiz Suárez, Laurent Romary, and Benoît Sagot. 2020. A Monolingual Approach to Contextualized Word Embeddings for Mid-Resource Languages. In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, pages 1703–1714, Online. Association for Computational Linguistics.</a></li>
             </ul>
