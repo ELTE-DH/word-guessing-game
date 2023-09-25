@@ -3,38 +3,83 @@
     <head>
         <title>{{ui_strings.title}}</title>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="static/style.css">
         <script>
         function change() {
 
             var text = document
                 .getElementById("guessed_word").value;
-            var wordLength = {{- word_length -}} - text.length;
+            var wordLength = "{{- word_length -}}" - text.length;
 
             var butt = document.getElementById("guess");
             if (! butt.disabled)
                 butt.textContent = "{{ ui_strings.guess }} (" + wordLength + ")";
                 butt.value = "{{ ui_strings.guess }} (" + wordLength + ")";
         }
-    </script>
+        </script>
     </head>
-    <body>
-        {% with messages = get_flashed_messages() -%}
-        <div style="width: 100%; text-align: center; margin-left: auto; margin-right: auto;">
-            <ul>
-            {%- if messages -%}
-            {%- for message in messages %}
-                <li style="text-align: center; display: block;">{{ message }}</li>
-            {%- endfor %}
-            {% else %}
-                <li style="text-align: center; display: block;">&nbsp;</li>
-            {% endif -%}
-            </ul>
-        </div>
-        <br>
-        {% endwith -%}
-        <form action="" method="get">
-            <div style="overflow:hidden; width: 100%; display:table;">
-                <div style="text-align: left; display:table-cell; width: 15%;">
+    <body class="bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white">
+        <div id="info_modal" class="relative z-10 hidden">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+          
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+              <div class="flex min-h-full items-end justify-center text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-zinc-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[50%]">
+                  <div class="bg-white dark:bg-zinc-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                      <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left ">
+                        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white" id="modal-title">Leírás</h3>
+                        <div class="mt-2">
+                          {{ ui_strings.footer|safe }}
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-white dark:bg-zinc-800 px-4 pt-3 pb-5 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button type="button" id="ok_modal_btn" class="dh-btn-green1">Rendben</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <nav class="dh-navigation">
+            <div class="dh-nav-div-1">
+                <img class="dh-nav-img" src="https://elte-dh.hu/wp-content/uploads/2020/12/eltebronzos.png">
+            </div>
+            <div class="dh-nav-div-2">
+              <div class="dh-nav-div-3">
+                <h1 href="#responsive-header" class="dh-nav-title">
+                    {{ui_strings.title}}
+                </h1>
+              </div>
+              
+              
+              <div>
+                <a href="https://elte-dh.hu/" class="dh-btn-green1">ELTE DH</a>
+                <a href="#" id="show_modal_btn" class="dh-btn-green1">Leírás</a>
+              </div>
+              
+            </div>
+        </nav>
+
+        <section class="dh-page-container mt-10 mb-10">
+        <div class="dh-page-frame">
+        <form action="" method="get" class="">
+                {% with messages = get_flashed_messages() -%}
+                <div >
+                    <ul>
+                    {%- if messages -%}
+                    {%- for message in messages %}
+                        <li >{{ message }}</li>
+                    {%- endfor %}
+                    {% else %}
+                        <li >&nbsp;</li>
+                    {% endif -%}
+                    </ul>
+                </div>
+                {% endwith -%}
+                <div >
                 {% if previous_guesses|length > 0 -%}
                     {{ ui_strings.previous_guesses }}:
                     {%- for word, similarity in previous_guesses %}
@@ -43,39 +88,60 @@
                     <ul>
                         {%- for word, similarity in previous_guesses %}
                         {%- if similarity|length > 0 -%}
-                        <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }} ({{ similarity }})</li>
+                        <li >{{ word }} ({{ similarity }})</li>
                         {%- else -%}
-                        <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }}</li>
+                        <li >{{ word }}</li>
                         {%- endif -%}
                         {%- endfor %}
                     </ul>
                 {% endif -%}
                 </div>
-                <div style="text-align: center; overflow: hidden; display:table-cell; width: 60%;">
-                    <label for="guessed_word">Tipp: </label><input autofocus onchange="change();" onkeypress="change();" onpaste="change();" oninput="change();" type="text" name="guessed_word" id="guessed_word" {% if not buttons_enabled.guess %}disabled{%endif%}>
-                    <input type="submit" name="guess" id="guess" value="{{ ui_strings.guess }} {{ word_length_str }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
-                    <input type="submit" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
-                    <br><br>
-                    <input type="submit" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
-                    <input type="submit" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
-                    <input type="submit" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
-                    <br><br>
+                <div class="flex flex-col items-center">
+                    
+                    <div class="m-2">
+                    <label class="hidden" for="guessed_word">Tipp: </label><input class="dh-guess-input" placeholder="Ide írd a tippet" maxlength="{{ word_length }}" autofocus onchange="change();" onkeypress="change();" onpaste="change();" oninput="change();" type="text" name="guessed_word" id="guessed_word"  {% if not buttons_enabled.guess %}disabled{%endif%}>
+                    
+                    <input type="submit" class="{% if not buttons_enabled.guess %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="guess" id="guess" value="{{ ui_strings.guess }} {{ word_length_str }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
+                    <input type="submit" class="{% if not buttons_enabled.next_line %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
+                    <input type="submit" class="{% if not buttons_enabled.give_up %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
+                    <input type="submit" class="{% if not buttons_enabled.new_game %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
+                    <input type="submit" class="{% if not buttons_enabled.new_game_vs_other %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
+                    </div>
+
                     {%- for line_id, pre, word, post in displayed_lines %}
                     <input type="hidden" name="displayed_lines[]" value="{{ line_id }}">
                     {%- endfor %}
-                    <table style="border-collapse: collapse; border-spacing: 0; margin-left: auto; margin-right: auto;">
+                    <table class="m-12">
                         <tbody>
                             {%- for line_id, left, word, right in displayed_lines %}
-                            <tr>
-                                <td style="border-width:0px; text-align: right;">...{{ left }}</td>
-                                <td style="border-width:0px; text-align: center;"> <strong>{{ word }}</strong> </td>
-                                <td style="border-width:0px; text-align: left;">{{ right }}...</td>
+                            {% if loop.first %}
+                            <tr class="{% if not buttons_enabled.new_game %}transition-opacity ease-in-out delay-500 duration-500  opacity-0 sentence-line-first{%endif%}">
+                                <td class="text-right">...{{ left }}</td>
+                                <td > 
+                                  <div class="flip-card relative [transform-style:preserve-3d] {% if buttons_enabled.new_game %} is_flip transition ease-in-out  delay-300 duration-500 {%endif%} font-mono">
+                                    <div class="flip-card-back h-full [backface-visibility:hidden] text-center bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">XXXX</div>
+                                    <div class="flip-card-front absolute inset-0 h-full [transform:rotateY(180deg)] [backface-visibility:hidden] text-center bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">{{ word }}</div>
+                                  </div>
+                                 </td>
+                                <td class="text-left">{{ right }}...</td>
                             </tr>
+                            {%else%}
+                            <tr class="{% if not buttons_enabled.new_game %}-translate-y-12 transition ease-in-out delay-300 sentence-line-other{%endif%}">
+                              <td class="text-right">...{{ left }}</td>
+                              <td > 
+                                <div class="flip-card relative [transform-style:preserve-3d] {% if buttons_enabled.new_game %} is_flip transition ease-in-out  delay-300 duration-500 {%endif%} font-mono">
+                                  <div class="flip-card-back h-full [backface-visibility:hidden] text-center bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">XXXX</div>
+                                  <div class="flip-card-front absolute inset-0 h-full [transform:rotateY(180deg)] [backface-visibility:hidden] text-center bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">{{ word }}</div>
+                                </div>
+                               </td>
+                              <td class="text-left">{{ right }}...</td>
+                            </tr>
+                            {% endif %}
                             {%- endfor %}
                         </tbody>
                     </table>
                 </div>
-                <div style="text-align: left; display:table-cell; width: 15%;">
+                <div >
                 <input type="hidden" name="other_guess_state" value="{{ other_guess_state }}">
                 {% if previous_guesses_other|length > 0 -%}
                     {{ ui_strings.previous_guesses_other }}:
@@ -84,16 +150,57 @@
                     {%- endfor %}
                     <ul>
                         {%- for word, similarity in previous_guesses_other %}
-                        <li style="text-align: left; display: block; background-color: #FFFFFF;">{{ word }} ({{ similarity }})</li>
+                        <li >{{ word }} ({{ similarity }})</li>
                         {%- endfor %}
                     </ul>
                 {% endif -%}
                 </div>
-            </div>
         </form>
-        <div style="width: 100%;">
+        <div class="hidden">
            <hr>
             {{ ui_strings.footer|safe }}
         </div>
+        </div>
+        </section>
+        <script>
+            let info_modal = document.querySelector('#info_modal');
+            let show_modal_btn = document.querySelector('#show_modal_btn');
+            let ok_modal_btn = document.querySelector('#ok_modal_btn');
+            let flip_cards =document.querySelectorAll('.flip-card');
+
+            flip_cards.forEach(item => {
+              let back = item.querySelector('.flip-card-back');
+              let front = item.querySelector('.flip-card-front');
+              console.log(front.innerText.length);
+              back.innerText = 'X'.repeat(front.innerText.length)
+            })
+
+            show_modal_btn.addEventListener('click',event => {
+                info_modal.classList.toggle('hidden');
+            });
+            ok_modal_btn.addEventListener('click',event => {
+                info_modal.classList.toggle('hidden');
+            });
+
+            window.onload = function() {
+                let sentence_line_other = document.querySelectorAll('.sentence-line-other');
+                sentence_line_other.forEach(item => {
+                    item.classList.toggle('-translate-y-12')
+                });
+                let sentence_line_first = document.querySelector('.sentence-line-first');
+                if(sentence_line_first) {
+                  sentence_line_first.classList.toggle('opacity-0');
+                }
+                
+                flip_cards.forEach(item => {
+                  if(item.classList.contains('is_flip')) {
+                    item.classList.toggle('[transform:rotateY(180deg)]')
+                  }
+                })
+            }
+
+            
+        </script>
+        
     </body>
 </html>
