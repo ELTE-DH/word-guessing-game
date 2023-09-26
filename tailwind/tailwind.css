@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+@layer base {
+    
+}
+
+@layer components {
+    
+    body {
+        @apply h-screen;
+    }
+    /*navbar*/
+    .dh-navigation {
+        @apply flex items-center justify-between flex-wrap bg-black p-6;
+    }
+    .dh-navigation-sticky {
+        @apply sticky top-0 z-50;
+    }
+    .dh-nav-div-1 {
+        @apply flex items-center flex-shrink-0 text-white mr-6;
+    }
+    .dh-nav-div-2 {
+        @apply w-full block flex-grow lg:flex lg:items-center lg:w-auto;
+    }
+    .dh-nav-div-3 {
+        @apply text-sm lg:flex-grow;
+    }
+    .dh-nav-img {
+        @apply fill-current h-12 mr-2;
+    }
+    .dh-nav-title {
+        @apply block mt-4 lg:inline-block lg:mt-0 text-white mr-4 text-2xl;
+    }
+    /*login*/
+    .dh-page-container {
+        @apply bg-zinc-50 dark:bg-zinc-900;
+    }
+    .dh-page-frame {
+        @apply flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-full lg:py-0;
+    }
+    .dh-login-card {
+        @apply w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-zinc-800 dark:border-zinc-700;
+    }
+    .dh-login-card-container {
+        @apply p-6 space-y-4 md:space-y-6 sm:p-8;
+    }
+    .dh-login-title {
+        @apply text-xl font-bold leading-tight tracking-tight md:text-2xl text-zinc-900 dark:text-white;
+    }
+    .dh-login-form {
+        @apply space-y-4 md:space-y-6;
+    }
+    .dh-login-label {
+        @apply block mb-2 text-sm font-medium text-zinc-900 dark:text-white
+    }
+    .dh-login-input {
+        @apply bg-zinc-100 border border-zinc-300 text-zinc-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+    }
+    /*buttons*/
+    .dh-btn-green1 {
+        @apply font-semibold inline-block text-sm px-8 py-4 leading-none rounded text-white bg-dhbronze1 hover:border-transparent hover:text-white hover:bg-dhbronze2 mt-4 lg:mt-0 transition duration-300;
+    }
+    .dh-btn-disabled {
+        @apply font-semibold inline-block text-sm px-8 py-4 leading-none rounded text-white bg-gray-500 hover:border-transparent hover:text-white mt-4 lg:mt-0 transition duration-300;
+    }
+    /*annot*/
+    .dh-textarea {
+        @apply w-full resize-y bg-white rounded-md bg-zinc-100 border border-zinc-300 text-zinc-900 focus:ring-blue-600 focus:border-blue-600 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+    }
+    .dh-form {
+        @apply w-full m-4 flex flex-col items-center justify-center
+    }
+    .dh-title {
+        @apply mt-4 lg:mt-0 dark:text-white mr-4 text-lg text-left;
+    }
+    .dh-copy-btn {
+        @apply font-semibold text-sm px-2 py-2 leading-none rounded text-white bg-dhbronze1 hover:border-transparent hover:text-white hover:bg-dhbronze2 lg:mt-0 transition duration-300;
+    }
+    .dh-translations-div {
+        @apply w-full flex my-2 rounded-lg border-transparent hover:border-solid border-4 hover:border-[#134E2D];
+    }
+    #info_modal p{
+        @apply pb-4;
+    }
+    #info_modal a {
+        @apply text-dhbronze1 hover:text-dhbronze2 underline ;
+    }
+    #info_modal ul {
+        @apply list-disc px-8;
+    }
+    .dh-guess-input {
+        @apply bg-zinc-100 border mb-2 border-zinc-300 text-zinc-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 p-3 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 inline-block ;
+    }
+}  
