@@ -149,8 +149,8 @@
                 </div>
                 <div class="basis-1/6 ml-2 ">
                   <input type="hidden" name="other_guess_state" value="{{ other_guess_state }}">
-                  {% if previous_guesses_other|length < 0 -%}
-                      <div class="text-left border-l dark:border-zinc-700">
+                  {% if previous_guesses_other|length > 0 -%}
+                      <div class="text-left p-2 m-2 border-l dark:border-zinc-700">
                       {{ ui_strings.previous_guesses_other }}:
                       {%- for word, similarity in previous_guesses_other %}
                       <input type="hidden" name="previous_guesses_other[]" value="{{ word }}">

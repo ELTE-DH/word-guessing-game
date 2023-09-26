@@ -11,11 +11,11 @@ contextbank_config:
     right_size: 5
     hide_char: X
 guesser_config:
-    baseurl: null
-    guesser: null
-    similarity: null
-    retry_wrong: null
-    top_n: null
+    baseurl: http://porthos.elte-dh.hu:5000/
+    guesser: bert
+    similarity: cbow
+    retry_wrong: False
+    top_n: 10
 ui_strings:
     title: Szókitaláló játék
     guess: Tipp
