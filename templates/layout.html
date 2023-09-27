@@ -68,16 +68,16 @@
                     {% endif -%}
                     </ul>
                 </div>
-                {% endwith -%}
+                
                 <div class="dh-grid1">
                 <div class="">  
                 {% if previous_guesses|length > 0 -%}
-                  <div class="dh-prev-guesses">
+                  <div class="dh-prev-guesses font-semibold">
                     {{ ui_strings.previous_guesses }}:
                     {%- for word, similarity in previous_guesses %}
                     <input type="hidden" name="previous_guesses[]" value="{{ word }}">
                     {%- endfor %}
-                    <ul class="">
+                    <ul class="font-normal mt-2 pt-2 border-t dark:border-zinc-700">
                         {%- for word, similarity in previous_guesses %}
                         {%- if similarity|length > 0 -%}
                         <li class="break-words">{{ word }} ({{ similarity }})</li>
@@ -92,12 +92,12 @@
                 <div class="dh-grid2">
                     
                     <div class="dh-game-menu-grid">
-                      <input class="lg:col-start-2 dh-guess-input" placeholder="Ide írd a tippet" minlength="{{ word_length }}" maxlength="{{ word_length }}" autofocus onchange="change();" onkeypress="change();" onpaste="change();" oninput="change();" type="text" name="guessed_word" id="guessed_word"  {% if not buttons_enabled.guess %}disabled{%endif%}>
-                      <input type="submit" class="{% if not buttons_enabled.guess %}                  dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="guess" id="guess" value="{{ ui_strings.guess }} {{ word_length_str }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
-                      <input type="submit" class="{% if not buttons_enabled.next_line %}              dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
-                      <input type="submit" class="lg:col-start-2 {% if not buttons_enabled.give_up %} dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
-                      <input type="submit" class="{% if not buttons_enabled.new_game %}               dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
-                      <input type="submit" class="{% if not buttons_enabled.new_game_vs_other %}      dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
+                      <input class="lg:col-start-2 dh-guess-input" placeholder="Ide írd a tippet" maxlength="{{ word_length }}" autofocus onchange="change();" onkeypress="change();" onpaste="change();" oninput="change();" type="text" name="guessed_word" id="guessed_word"  {% if not buttons_enabled.guess %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.guess %}                    dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="guess" id="guess" value="{{ ui_strings.guess }} {{ word_length_str }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.new_game %}                 dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
+                      <input type="submit" class="lg:col-start-2 {% if not buttons_enabled.next_line %} dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.give_up %}                  dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.new_game_vs_other %}        dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
                     </div>
 
                     {%- for line_id, pre, word, post in displayed_lines %}
@@ -107,7 +107,7 @@
                       <tbody class="flex flex-col">
                           {%- for line_id, left, word, right in displayed_lines %}
                           {% if loop.first %}
-                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %} dh-1st-elem-transition opacity-0 {%endif%}">
+                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %} {% if not messages %} dh-1st-elem-transition opacity-0 {%endif%} {%endif%}">
                               <td class="dh-half-sentence text-right">{{ left }}</td>
                               <td class="flex flex-none"> 
                                 <div class="dh-flip-card {% if buttons_enabled.new_game %} dh-flip-card-properties {%endif%}">
@@ -118,7 +118,7 @@
                               <td class="dh-half-sentence text-left">{{ right }}</td>
                           </tr>
                           {%else%}
-                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %} dh-other-elem-transition -translate-y-[56px] {%endif%}">
+                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %} {% if not messages %} dh-other-elem-transition -translate-y-[56px] {%endif%} {%endif%}">
                             <td class="dh-half-sentence text-right">{{ left }}</td>
                             <td class="flex flex-none"> 
                               <div class="dh-flip-card {% if buttons_enabled.new_game %} dh-flip-card-properties {%endif%}">
@@ -136,12 +136,12 @@
                 <div class="">
                   <input type="hidden" name="other_guess_state" value="{{ other_guess_state }}">
                   {% if previous_guesses_other|length > 0 -%}
-                      <div class="text-left p-2 m-2 border-l dark:border-zinc-700">
+                      <div class="text-left p-2 m-2 border-l dark:border-zinc-700 font-semibold">
                       {{ ui_strings.previous_guesses_other }}:
                       {%- for word, similarity in previous_guesses_other %}
                       <input type="hidden" name="previous_guesses_other[]" value="{{ word }}">
                       {%- endfor %}
-                      <ul>
+                      <ul class="font-normal mt-2 pt-2 border-t dark:border-zinc-700">
                           {%- for word, similarity in previous_guesses_other %}
                           <li >{{ word }} ({{ similarity }})</li>
                           {%- endfor %}
@@ -150,6 +150,7 @@
                   {% endif -%}
                 </div>
                 </div> <!-- grid1 -->
+                {% endwith -%}
         </form>
         </div>
         </section>
@@ -165,6 +166,14 @@
                   butt.textContent = "{{ ui_strings.guess }} (" + wordLength + ")";
                   butt.value = "{{ ui_strings.guess }} (" + wordLength + ")";
             }
+
+            let guessBtn = document.querySelector('#guess');
+            guessBtn.addEventListener('click',event => {
+                guessBtn.classList.remove('dh-btn-bronze1');
+                guessBtn.classList.add('dh-btn-disabled');
+                guessBtn.value = 'betöltés...'
+            });
+
             let info_modal = document.querySelector('.info_modal');
             let show_modal_btn = document.querySelector('#show_modal_btn');
             let ok_modal_btn = document.querySelector('#ok_modal_btn');
