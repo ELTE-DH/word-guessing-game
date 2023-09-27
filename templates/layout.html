@@ -8,30 +8,19 @@
         <!--for editing tailwindcss-->
         <link rel="stylesheet" href="../static/style.css">
         <script>
-        function change() {
-
-            var text = document
-                .getElementById("guessed_word").value;
-            var wordLength = "{{- word_length -}}" - text.length;
-
-            var butt = document.getElementById("guess");
-            if (! butt.disabled)
-                butt.textContent = "{{ ui_strings.guess }} (" + wordLength + ")";
-                butt.value = "{{ ui_strings.guess }} (" + wordLength + ")";
-        }
         </script>
     </head>
-    <body class="bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white min-w-[650px]">
-        <div id="info_modal" class="relative z-10 hidden">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    <body class="dh-body-class">
+        <div id="" class="info_modal hidden">
+            <div class="info_modal_bg"></div>
           
-            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-              <div class="flex min-h-full items-end justify-center text-center sm:items-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-zinc-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[50%]">
-                  <div class="bg-white dark:bg-zinc-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                      <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left ">
-                        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white" id="modal-title">Leírás</h3>
+            <div class="info_modal_div1">
+              <div class="info_modal_div2">
+                <div class="info_modal_div3">
+                  <div class="info_modal_div4">
+                    <div class="info_modal_div5">
+                      <div class="info_modal_div6">
+                        <h3 class="info_modal_title" id="modal-title">Leírás</h3>
                         <div class="mt-2">
                           {{ ui_strings.footer|safe }}
                           
@@ -39,8 +28,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="bg-white dark:bg-zinc-800 px-4 pt-3 pb-5 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" id="ok_modal_btn" class="dh-btn-green1 p-4">Rendben</button>
+                  <div class="info_modal_btn_div">
+                    <button type="button" id="ok_modal_btn" class="dh-btn-bronze1 p-4">Rendben</button>
                   </div>
                 </div>
               </div>
@@ -56,11 +45,9 @@
                     {{ui_strings.title}}
                 </h1>
               </div>
-              
-              
               <div>
-                <a href="https://elte-dh.hu/" class="dh-btn-green1 p-4">ELTE DH</a>
-                <a href="#" id="show_modal_btn" class="dh-btn-green1 p-4">Leírás</a>
+                <a href="https://elte-dh.hu/" class="dh-btn-bronze1 p-4">ELTE DH</a>
+                <a href="#" id="show_modal_btn" class="dh-btn-bronze1 p-4">Leírás</a>
               </div>
               
             </div>
@@ -82,10 +69,10 @@
                     </ul>
                 </div>
                 {% endwith -%}
-                <div class="grid md:grid-cols-8 grid-cols-4">
+                <div class="dh-grid1">
                 <div class="">  
                 {% if previous_guesses|length > 0 -%}
-                  <div class="text-right p-2 m-2 border-r dark:border-zinc-700">
+                  <div class="dh-prev-guesses">
                     {{ ui_strings.previous_guesses }}:
                     {%- for word, similarity in previous_guesses %}
                     <input type="hidden" name="previous_guesses[]" value="{{ word }}">
@@ -102,16 +89,15 @@
                   </div>
                 {% endif -%}
                 </div>
-                <div class="md:col-span-6 col-span-2">
+                <div class="dh-grid2">
                     
-                    <div class="m-2 grid gap-2 lg:grid-cols-5 md:grid-cols-3 grid-cols-2">
-                    <input class="h-full lg:col-start-2 dh-guess-input" placeholder="Ide írd a tippet" minlength="{{ word_length }}" maxlength="{{ word_length }}" autofocus onchange="change();" onkeypress="change();" onpaste="change();" oninput="change();" type="text" name="guessed_word" id="guessed_word"  {% if not buttons_enabled.guess %}disabled{%endif%}>
-                    
-                    <input type="submit" class="h-full {% if not buttons_enabled.guess %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="guess" id="guess" value="{{ ui_strings.guess }} {{ word_length_str }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
-                    <input type="submit" class="{% if not buttons_enabled.next_line %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
-                    <input type="submit" class="lg:col-start-2 {% if not buttons_enabled.give_up %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
-                    <input type="submit" class="{% if not buttons_enabled.new_game %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
-                    <input type="submit" class="{% if not buttons_enabled.new_game_vs_other %}cursor-not-allowed dh-btn-disabled{%else%} dh-btn-green1 {%endif%}" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
+                    <div class="dh-game-menu-grid">
+                      <input class="lg:col-start-2 dh-guess-input" placeholder="Ide írd a tippet" minlength="{{ word_length }}" maxlength="{{ word_length }}" autofocus onchange="change();" onkeypress="change();" onpaste="change();" oninput="change();" type="text" name="guessed_word" id="guessed_word"  {% if not buttons_enabled.guess %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.guess %}                  dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="guess" id="guess" value="{{ ui_strings.guess }} {{ word_length_str }}" {% if not buttons_enabled.guess %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.next_line %}              dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="next_line" value="{{ ui_strings.next_line }}" {% if not buttons_enabled.next_line %}disabled{%endif%}>
+                      <input type="submit" class="lg:col-start-2 {% if not buttons_enabled.give_up %} dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="give_up" value="{{ ui_strings.give_up }}" {% if not buttons_enabled.give_up %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.new_game %}               dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="new_game" value="{{ ui_strings.new_game }}" {% if not buttons_enabled.new_game %}disabled{%endif%}>
+                      <input type="submit" class="{% if not buttons_enabled.new_game_vs_other %}      dh-btn-disabled {%else%} dh-btn-bronze1 {%endif%}" name="new_game_vs_other" value="{{ ui_strings.new_game_vs_other }}" {% if not buttons_enabled.new_game_vs_other %}disabled{%endif%}>
                     </div>
 
                     {%- for line_id, pre, word, post in displayed_lines %}
@@ -121,26 +107,26 @@
                       <tbody class="flex flex-col">
                           {%- for line_id, left, word, right in displayed_lines %}
                           {% if loop.first %}
-                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %}transition-opacity ease-in-out delay-500 duration-500  opacity-0 sentence-line-first{%endif%}">
-                              <td class="flex-auto w-full text-right py-2">{{ left }}</td>
+                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %} dh-1st-elem-transition opacity-0 {%endif%}">
+                              <td class="dh-half-sentence text-right">{{ left }}</td>
                               <td class="flex flex-none"> 
-                                <div class="self-center flip-card relative [transform-style:preserve-3d] {% if buttons_enabled.new_game %}is_flip transition ease-in-out  delay-300 duration-500 {%endif%} font-mono">
-                                  <div class="flip-card-back h-full [backface-visibility:hidden] text-center bg-white rounded-lg border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">XXXX</div>
-                                  <div class="flip-card-front absolute inset-0 h-full [transform:rotateY(180deg)] [backface-visibility:hidden] text-center bg-white rounded-lg border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">{{ word }}</div>
+                                <div class="dh-flip-card {% if buttons_enabled.new_game %} dh-flip-card-properties {%endif%}">
+                                  <div class="dh-flip-card-back">XXXX</div>
+                                  <div class="dh-flip-card-front">{{ word }}</div>
                                 </div>
                                </td>
-                              <td class="flex-auto w-full text-left py-2">{{ right }}</td>
+                              <td class="dh-half-sentence text-left">{{ right }}</td>
                           </tr>
                           {%else%}
-                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %}transition -translate-y-[56px]  ease-in-out delay-300 sentence-line-other{%endif%}">
-                            <td class="flex-auto w-full text-right py-2">{{ left }}</td>
+                          <tr class="flex justify-around mt-2 {% if not buttons_enabled.new_game %} dh-other-elem-transition -translate-y-[56px] {%endif%}">
+                            <td class="dh-half-sentence text-right">{{ left }}</td>
                             <td class="flex flex-none"> 
-                              <div class="self-center flip-card relative [transform-style:preserve-3d] {% if buttons_enabled.new_game %} is_flip transition ease-in-out  delay-300 duration-500 {%endif%} font-mono">
-                                <div class="flip-card-back h-full [backface-visibility:hidden] text-center bg-white rounded-lg border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">XXXX</div>
-                                <div class="flip-card-front absolute inset-0 h-full [transform:rotateY(180deg)] [backface-visibility:hidden] text-center bg-white rounded-lg border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1">{{ word }}</div>
+                              <div class="dh-flip-card {% if buttons_enabled.new_game %} dh-flip-card-properties {%endif%}">
+                                <div class="dh-flip-card-back">XXXX</div>
+                                <div class="dh-flip-card-front">{{ word }}</div>
                               </div>
                              </td>
-                            <td class="flex-auto w-full text-left py-2">{{ right }}</td>
+                            <td class="dh-half-sentence text-left">{{ right }}</td>
                           </tr>
                           {% endif %}
                           {%- endfor %}
@@ -165,21 +151,28 @@
                 </div>
                 </div> <!-- grid1 -->
         </form>
-        <div class="hidden">
-           <hr>
-            {{ ui_strings.footer|safe }}
-        </div>
         </div>
         </section>
         <script>
-            let info_modal = document.querySelector('#info_modal');
+            function change() {
+
+              var text = document
+                  .getElementById("guessed_word").value;
+              var wordLength = "{{- word_length -}}" - text.length;
+
+              var butt = document.getElementById("guess");
+              if (! butt.disabled)
+                  butt.textContent = "{{ ui_strings.guess }} (" + wordLength + ")";
+                  butt.value = "{{ ui_strings.guess }} (" + wordLength + ")";
+            }
+            let info_modal = document.querySelector('.info_modal');
             let show_modal_btn = document.querySelector('#show_modal_btn');
             let ok_modal_btn = document.querySelector('#ok_modal_btn');
-            let flip_cards =document.querySelectorAll('.flip-card');
+            let flip_cards =document.querySelectorAll('.dh-flip-card');
 
             flip_cards.forEach(item => {
-              let back = item.querySelector('.flip-card-back');
-              let front = item.querySelector('.flip-card-front');
+              let back = item.querySelector('.dh-flip-card-back');
+              let front = item.querySelector('.dh-flip-card-front');
               back.innerText = 'X'.repeat(front.innerText.length)
             })
 
@@ -191,17 +184,17 @@
             });
 
             window.onload = function() {
-                let sentence_line_other = document.querySelectorAll('.sentence-line-other');
+                let sentence_line_other = document.querySelectorAll('.dh-other-elem-transition');
                 sentence_line_other.forEach(item => {
                     item.classList.toggle('-translate-y-[56px]')
                 });
-                let sentence_line_first = document.querySelector('.sentence-line-first');
+                let sentence_line_first = document.querySelector('.dh-1st-elem-transition');
                 if(sentence_line_first) {
                   sentence_line_first.classList.toggle('opacity-0');
                 }
                 
                 flip_cards.forEach(item => {
-                  if(item.classList.contains('is_flip')) {
+                  if(item.classList.contains('dh-flip-card-properties')) {
                     item.classList.toggle('[transform:rotateY(180deg)]')
                   }
                 })

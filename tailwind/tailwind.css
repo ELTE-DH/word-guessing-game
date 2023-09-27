@@ -8,22 +8,21 @@
 }
 
 @layer components {
-    
     body {
         @apply h-screen;
+    }
+    .dh-body-class {
+        @apply bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white min-w-[650px];
     }
     /*navbar*/
     .dh-navigation {
         @apply flex items-center justify-between flex-wrap bg-black p-6;
     }
-    .dh-navigation-sticky {
-        @apply sticky top-0 z-50;
-    }
     .dh-nav-div-1 {
         @apply flex items-center flex-shrink-0 text-white mr-6;
     }
     .dh-nav-div-2 {
-        @apply w-full block flex-grow flex items-center lg:w-auto;
+        @apply w-full flex-grow flex items-center lg:w-auto;
     }
     .dh-nav-div-3 {
         @apply text-sm flex-grow;
@@ -34,64 +33,96 @@
     .dh-nav-title {
         @apply block mt-4 lg:inline-block lg:mt-0 text-white mr-4 text-2xl;
     }
-    /*login*/
+    /*page*/
     .dh-page-container {
-        @apply bg-zinc-50 dark:bg-zinc-900;
+        @apply bg-zinc-50 dark:bg-zinc-900 ;
     }
     .dh-page-frame {
         @apply flex flex-col items-center justify-center px-1 py-2;
     }
-    .dh-login-card {
-        @apply w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-zinc-800 dark:border-zinc-700;
-    }
-    .dh-login-card-container {
-        @apply p-6 space-y-4 md:space-y-6 sm:p-8;
-    }
-    .dh-login-title {
-        @apply text-xl font-bold leading-tight tracking-tight md:text-2xl text-zinc-900 dark:text-white;
-    }
-    .dh-login-form {
-        @apply space-y-4 md:space-y-6;
-    }
-    .dh-login-label {
-        @apply block mb-2 text-sm font-medium text-zinc-900 dark:text-white
-    }
-    .dh-login-input {
-        @apply bg-zinc-100 border border-zinc-300 text-zinc-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
-    }
     /*buttons*/
-    .dh-btn-green1 {
-        @apply font-semibold inline-block text-sm px-2 py-2 leading-none rounded text-white bg-dhbronze1 hover:border-transparent hover:text-white hover:bg-dhbronze2 mt-0 transition duration-300;
+    .dh-btn-bronze1 {
+        @apply font-semibold inline-block text-sm px-2 py-2 leading-none rounded text-white bg-dhbronze1 hover:border-transparent hover:text-white hover:bg-dhbronze2 mt-0 transition duration-300 cursor-pointer;
     }
     .dh-btn-disabled {
-        @apply font-semibold inline-block text-sm px-2 py-2 leading-none rounded text-white bg-gray-400 text-gray-300 mt-0 transition duration-300;
-    }
-    /*annot*/
-    .dh-textarea {
-        @apply w-full resize-y bg-white rounded-md bg-zinc-100 border border-zinc-300 text-zinc-900 focus:ring-blue-600 focus:border-blue-600 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
-    }
-    .dh-form {
-        @apply w-full m-4 flex flex-col items-center justify-center
-    }
-    .dh-title {
-        @apply mt-4 lg:mt-0 dark:text-white mr-4 text-lg text-left;
-    }
-    .dh-copy-btn {
-        @apply font-semibold text-sm px-2 py-2 leading-none rounded text-white bg-dhbronze1 hover:border-transparent hover:text-white hover:bg-dhbronze2 lg:mt-0 transition duration-300;
-    }
-    .dh-translations-div {
-        @apply w-full flex my-2 rounded-lg border-transparent hover:border-solid border-4 hover:border-[#134E2D];
-    }
-    #info_modal p{
-        @apply pb-4;
-    }
-    #info_modal a {
-        @apply text-dhbronze1 hover:text-dhbronze2 underline ;
-    }
-    #info_modal ul {
-        @apply list-disc px-8;
+        @apply font-semibold inline-block text-sm px-2 py-2 leading-none rounded bg-gray-400 text-gray-300 mt-0 transition duration-300 cursor-not-allowed;
     }
     .dh-guess-input {
-        @apply bg-zinc-100 border border-zinc-300 text-zinc-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 p-2 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 inline-block ;
+        @apply bg-zinc-100 border border-zinc-300 text-zinc-900 sm:text-sm rounded-lg focus:ring-dhbronze2 focus:border-dhbronze2 p-2 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white inline-block  ;
+    }
+    /*modal*/
+    .info_modal {
+        @apply relative z-10;
+    }
+    .info_modal_bg {
+        @apply fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity
+    }
+    .info_modal_div1 {
+        @apply fixed inset-0 z-10 w-screen overflow-y-auto;
+    }
+    .info_modal_div2 {
+        @apply flex min-h-full items-end justify-center text-center sm:items-center sm:p-0;
+    }
+    .info_modal_div3 {
+        @apply relative transform overflow-hidden rounded-lg bg-white dark:bg-zinc-800 text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-[80%];
+    }
+    .info_modal_div4 {
+        @apply bg-white dark:bg-zinc-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4;
+    }
+    .info_modal_div5 {
+        @apply flex items-start;
+    }
+    .info_modal_div6 {
+        @apply mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left;
+    }
+    .info_modal_title {
+        @apply text-base font-semibold leading-6 text-gray-900 dark:text-white;
+    }
+    .info_modal_btn_div {
+        @apply bg-white dark:bg-zinc-800 px-4 pt-3 pb-5 sm:flex sm:flex-row-reverse sm:px-6;
+    }
+    .info_modal p{
+        @apply pb-4;
+    }
+    .info_modal a {
+        @apply text-dhbronze1 hover:text-dhbronze2 underline ;
+    }
+    .info_modal ul {
+        @apply list-disc px-8;
+    }
+    /*grid*/
+    .dh-grid1 {
+        @apply grid md:grid-cols-8 grid-cols-4;
+    }
+    .dh-grid2 {
+        @apply md:col-span-6 col-span-2;
+    }
+    .dh-game-menu-grid {
+        @apply m-2 grid gap-2 lg:grid-cols-5 md:grid-cols-3 grid-cols-2;
+    }
+    .dh-prev-guesses {
+        @apply text-right p-2 m-2 border-r dark:border-zinc-700;
+    }
+    /*sentence list*/
+    .dh-1st-elem-transition {
+        @apply transition-opacity ease-in-out delay-500 duration-500;
+    }
+    .dh-other-elem-transition {
+        @apply transition ease-in-out delay-300;
+    }
+    .dh-flip-card {
+        @apply self-center relative [transform-style:preserve-3d] font-mono;
+    }
+    .dh-flip-card-front {
+        @apply absolute inset-0 h-full [transform:rotateY(180deg)] [backface-visibility:hidden] text-center bg-white rounded-lg border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1;
+    }
+    .dh-flip-card-back {
+        @apply h-full [backface-visibility:hidden] text-center bg-white rounded-lg border md:mt-0 sm:max-w-md dark:bg-zinc-800 dark:border-zinc-700 p-2 m-1;
+    }
+    .dh-flip-card-properties {
+        @apply transition ease-in-out delay-300 duration-500;
+    }
+    .dh-half-sentence {
+        @apply flex-auto w-full py-2;
     }
 }  
