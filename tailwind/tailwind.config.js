@@ -37,6 +37,6 @@ module.exports = {
     'dh-btn-green1',
     'dh-btn-disabled',
     'translate-y-20',
-    'opacity-0'
+    'opacity-0',
   ]
 }
