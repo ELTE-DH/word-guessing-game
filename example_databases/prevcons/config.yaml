@@ -1,26 +1,43 @@
-database_name: prevcons_conts.db
-table_name: examples
-id_name: id
-left_name: left
-word_name: word
-right_name: right
-ui-strings:
+db_config:
+    database_name: prevcons_conts.db
+    table_name: lines
+    id_name: id
+    left_name: left
+    word_name: word
+    right_name: right
+    freq_name: freq
+contextbank_config:
+    left_size: 5
+    right_size: 5
+    hide_char: X
+guesser_config:
+    baseurl: null
+    guesser: null
+    similarity: null
+    retry_wrong: null
+    top_n: null
+ui_strings:
     title: Szókitaláló játék "Ági edition"
     guess: Tipp
     give_up: Szabad a gazda
-    next_sent: Még egy mondat
+    next_line: Még egy sor
     new_game: Új játék
+    new_game_vs_other: Új játék a BERT ellen
     previous_guesses: Eddigi tippek
+    previous_guesses_other: A BERT eddigi tippjei
     no_guessed_word_specified: Hiányzó paraméter (a tippelt szó) !
-    no_displayed_sentences_specified: Hiányzó paraméter (a megjelenített mondatok azonosítói) !
+    no_displayed_lines_specified: Hiányzó paraméter (a megjelenített sorok azonosítói) !
     no_action_specified: Hiányzó paraméter (a kövekező lépés) !
     win: Eltaláltad! :)
     incorrect_guess: Nem talált! :(
-    no_more_sent_for_word: Nincs több mondat! :(
-    footer: Találd ki az igekötőt minél kevesebb mondatból! Az X karakterek ugyanazt az igekötőt rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó igekötő karaktereinek számával.)
-            <br><br>
-            Adatbázis:\ Kalivoda Ágnes – <a href="https://github.com/kagnes/prevcons">PrevCons</a><br>
+    no_more_line_for_word: Nincs több sor! :(
+    other_win: A BERT eltalálta!
+    other_gave_up: A BERT feladta!
+    other_guess_state_invalid: Nem megfelelő paraméterérték (other_guess_state) !
+    error: Hiba történt
+    footer: <p>Találd ki az igekötőt minél kevesebb mondatból! Az X karakterek ugyanazt az igekötőt rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó igekötő karaktereinek számával.)</p>
             <br>
+            <p>Adatbázis:\ Kalivoda Ágnes – <a href="https://github.com/kagnes/prevcons">PrevCons</a><p>
             <p>A PrevCons felhasználása esetén az alábbi publikációk egyike hivatkozandó:</p>
             <ul>
                 <li><a href="https://doi.org/10.34103/ARGUMENTUM/2021/4">Kalivoda Ágnes (2021). Az igekötők produktív kapcsolódási mintái. Argumentum 17. p. 56-82. https://doi.org/10.34103/ARGUMENTUM/2021/4</a></li>
