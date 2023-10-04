@@ -35,6 +35,8 @@ ui_strings:
     other_gave_up: A BERT feladta!
     other_guess_state_invalid: Nem megfelelő paraméterérték (other_guess_state) !
     error: Hiba történt
+    description: Részletek
+    ok: Rendben
     footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.) A helytelen szavak melletti szám az aktuális és a keresett szó hasonlóságát mutatja 1 és -1 között, ismeretlen szó esetén "nan" értékkel (Word2Vec most_similar() függvényének kimenete).</p>
             <br>
             <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>

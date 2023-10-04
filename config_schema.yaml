@@ -35,4 +35,6 @@ ui_strings:
     other_gave_up: str(none=False)
     other_guess_state_invalid: str(none=False)
     error: str(none=False)
+    description: str(none=False)
+    ok: str(none=False)
     footer: str(none=False)
