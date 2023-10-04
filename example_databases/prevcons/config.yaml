@@ -35,6 +35,8 @@ ui_strings:
     other_gave_up: A BERT feladta!
     other_guess_state_invalid: Nem megfelelő paraméterérték (other_guess_state) !
     error: Hiba történt
+    description: Részletek
+    ok: Rendben
     footer: <p>Találd ki az igekötőt minél kevesebb mondatból! Az X karakterek ugyanazt az igekötőt rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó igekötő karaktereinek számával.)</p>
             <br>
             <p>Adatbázis:\ Kalivoda Ágnes – <a href="https://github.com/kagnes/prevcons">PrevCons</a><p>

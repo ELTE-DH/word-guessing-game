@@ -35,6 +35,8 @@ ui_strings:
     other_gave_up: BERT gave up!
     other_guess_state_invalid: Incorrect parameter value (other_guess_state) !
     error: An error occurred
+    description: Description
+    ok: OK
     footer: <p>Guess the word in as few lines as possible! X characters hide the same word with contexts taken from different sentences.<br>(The number of X characters is the same as the number of characters in the word to be guessed.)</p>
             <br>
             <p>The code running below the page is based on the operation of <em>Language game © MorphoLogic, 2000</em>, with an independent codebase.</p>
