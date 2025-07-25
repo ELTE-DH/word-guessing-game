@@ -1,9 +1,9 @@
-sqlalchemy>1.3.0,<2.0.0
-flask>2.0.0,<3.0.0
-flask_sqlalchemy<3.0.0
-werkzeug>2.0.0,<3.0.0
+sqlalchemy
+flask
+flask_sqlalchemy
+werkzeug
 jinja2
 gunicorn
 pyyaml
 yamale
-requests>=2.31.0
+requests

@@ -4,6 +4,7 @@
 import os
 import sys
 from uuid import uuid4
+from pathlib import Path
 from logging.config import dictConfig
 
 from yaml import safe_load as yaml_load
@@ -53,7 +54,7 @@ def validate_config_special(config):
         config['guesser_config']['guesser'] is None) or \
             (config['guesser_config']['baseurl'] is None and
              config['guesser_config']['guesser'] is not None):
-        raise ValueError('Both or none of gueser_config/guesser_baseurl and gueser_config/guesser_name must be null!')
+        raise ValueError('Both or none of guesser_config/guesser_baseurl and guesser_config/guesser_name must be null!')
 
 
 def create_app(config_filename='config.yaml'):
@@ -69,9 +70,11 @@ def create_app(config_filename='config.yaml'):
 
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
+
+    db_name = str(Path(config["db_config"]["database_name"]).resolve())
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
-                                  SQLALCHEMY_DATABASE_URI=f'sqlite:///{config["db_config"]["database_name"]}',
+                                  SQLALCHEMY_DATABASE_URI=f'sqlite:///{db_name}',  # SQLite 2.0 needs abspath here
                                   SQLALCHEMY_TRACK_MODIFICATIONS=False,
                                   # JSONIFY_PRETTYPRINT_REGULAR=True,
                                   # JSON_AS_ASCII=False,
