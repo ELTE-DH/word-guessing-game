@@ -5,7 +5,8 @@ db_config:
     left_name: str(none=False)
     word_name: str(none=False)
     right_name: str(none=False)
-    freq_name: str(none=False)
+    valid_words_name: str(none=False)
+    construction_type_name: str(none=False)
 contextbank_config:
     left_size: int(none=False)
     right_size: int(none=False)

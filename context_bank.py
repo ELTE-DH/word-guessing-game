@@ -28,7 +28,8 @@ class ContextBank:
         self._left_obj = col_objs[db_config['left_name']]
         self._word_obj = col_objs[db_config['word_name']]
         self._right_obj = col_objs[db_config['right_name']]
-        self._freq = col_objs[db_config['freq_name']]
+        self._valid_words_obj = col_objs[db_config['valid_words_name']]
+        self._construction_type_obj = col_objs[db_config['construction_type_name']]
 
         if left_size < 0:
             left_size = 1_000_000  # Extremely big to include full sentence
@@ -60,7 +61,7 @@ class ContextBank:
         with self._engine.connect() as conn:
             all_lines_for_word_query = conn.execute(select(self._id_obj, self._left_obj, self._word_obj,
                                                            self._right_obj).
-                                                    where(self._word_obj == word))
+                                                    where(self._construction_type_obj == word))
 
             for line_id, left, word, right in all_lines_for_word_query:
                 word_hidden = hide_fun(word)
@@ -130,7 +131,8 @@ class ContextBank:
         """
 
         with self._engine.connect() as conn:
-            word, freq = conn.execute(select(self._word_obj, self._freq).where(self._id_obj == one_line_id)).one()
+            word, freq = conn.execute(select(self._construction_type_obj, self._valid_words_obj).
+                                      where(self._id_obj == one_line_id)).one()
 
         return word, freq
 
@@ -140,4 +142,4 @@ class ContextBank:
 
     def _hide_word(self, word: str):
         """Hide word with required amount of self._hide_char characters to maintain the length"""
-        return self._hide_char * len(word)
+        return self._hide_char * 10

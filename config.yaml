@@ -1,15 +1,16 @@
 db_config:
-    database_name: webcorpus1_conts.db
+    database_name: output.db
     table_name: lines
     id_name: id
     left_name: left
-    word_name: word
+    word_name: kwic
     right_name: right
-    freq_name: freq
+    valid_words_name: valid_words
+    construction_type_name: construction_type
 contextbank_config:
-    left_size: 5
-    right_size: 5
-    hide_char: X
+    left_size: 5000
+    right_size: 5000
+    hide_char: _
 guesser_config:
     baseurl: null
     guesser: null
