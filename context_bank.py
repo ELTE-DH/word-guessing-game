@@ -1,31 +1,28 @@
+from pathlib import Path
 from random import randrange, shuffle
 
-from sqlalchemy.orm import Session
-from sqlalchemy import func, Table, create_engine, MetaData
+from sqlalchemy import select, func, Table, create_engine, MetaData
 
 
 class ContextBank:
-    def __init__(self, db_config: dict, db=None, left_size: int = 5, right_size: int = 5, hide_char: str = '#'):
+    def __init__(self, db_config: dict, left_size: int = 5, right_size: int = 5, hide_char: str = '#'):
         """
         Interface for selecting words and appropriate contexts for them
 
         :param db_config: A dictionary containing the database configuration. Mandatory keys:  database_name,
             table_name, id_name, left_name, word_name, right_name, freq_name
-        :param db: An initialized flask_sqlalchemy.SQLAlchemy object
         :param left_size: the size of left context
         :param left_size: the size of right context
         :param hide_char: Character to use when hiding word
         """
 
-        if db is None and 'database_name' in db_config:
-            db = create_engine(f'sqlite:///{db_config["database_name"]}')
-            self._session = Session(db)
-        elif db is not None and hasattr(db, 'session'):
-            self._session = db.session
+        if 'database_name' in db_config:
+            # SQLAlchemy 2.0 needs abspath here
+            self._engine = create_engine(f'sqlite:///{str(Path(db_config["database_name"]).resolve())}').engine
         else:
             raise ValueError('db_config[\'database_name\'] or db from flask_sqlalchemy.SQLAlchemy must be set!')
 
-        self._table_obj = Table(db_config['table_name'], MetaData(), autoload_with=db.engine)
+        self._table_obj = Table(db_config['table_name'], MetaData(), autoload_with=self._engine)
         col_objs = {col_obj.key: col_obj for col_obj in self._table_obj.c}
         self._id_obj = col_objs[db_config['id_name']]
         self._left_obj = col_objs[db_config['left_name']]
@@ -60,17 +57,19 @@ class ContextBank:
                            ' if word is None in read_all_lines_for_word !')
         displayed_lines_set = set(displayed_lines)
 
-        all_lines_for_word_query = self._session.query(self._table_obj). \
-            with_entities(self._id_obj, self._left_obj, self._word_obj, self._right_obj). \
-            filter(self._word_obj == word)
-        for line_id, left, word, right in all_lines_for_word_query.all():
-            word_hidden = hide_fun(word)
-            left_truncated, right_truncated = self._truncate_context(left, right)
+        with self._engine.connect() as conn:
+            all_lines_for_word_query = conn.execute(select(self._id_obj, self._left_obj, self._word_obj,
+                                                           self._right_obj).
+                                                    where(self._word_obj == word))
 
-            if line_id in displayed_lines_set:
-                lines_to_display[line_id] = [line_id, left_truncated, word_hidden, right_truncated]
-            else:
-                new_lines.append([line_id, left_truncated, word_hidden, right_truncated])
+            for line_id, left, word, right in all_lines_for_word_query:
+                word_hidden = hide_fun(word)
+                left_truncated, right_truncated = self._truncate_context(left, right)
+
+                if line_id in displayed_lines_set:
+                    lines_to_display[line_id] = [line_id, left_truncated, word_hidden, right_truncated]
+                else:
+                    new_lines.append([line_id, left_truncated, word_hidden, right_truncated])
 
         lines_to_display = [lines_to_display[line_id] for line_id in displayed_lines]  # In the original order!
         shuffle(new_lines)
@@ -79,6 +78,7 @@ class ContextBank:
 
     def _truncate_context(self, left, right):
         """Truncate contexts if needed"""
+
         left_split = left.split(' ')
         right_split = right.split(' ')
         left_truncated = ' '.join(left_split[max(len(left_split)-self._left_size, 0):])
@@ -87,33 +87,36 @@ class ContextBank:
 
     def select_one_random_line(self):
         """Select one random line from all available lines
-            Raises sqlalchemy.orm.exc.NoResultFound if the query selects no rows
-            Raises sqlalchemy.orm.exc.MultipleResultsFound if multiple rows are returned
+            Raises sqlalchemy.exc.NoResultFound if the query selects no rows
+            Raises sqlalchemy.exc.MultipleResultsFound if multiple rows are returned
         """
 
         random_line_id = self._get_random_line_id()
 
         # Retrieve data for that specific line
-        entry_query = self._session.query(self._table_obj). \
-            with_entities(self._id_obj, self._left_obj, self._word_obj, self._right_obj). \
-            filter(self._id_obj == random_line_id)
-        line_id, left, word, right = entry_query.one()
+        with self._engine.connect() as conn:
+            entry_query = conn.execute(select(self._id_obj, self._left_obj, self._word_obj, self._right_obj).
+                                       where(self._id_obj == random_line_id))
+            line_id, left, word, right = entry_query.one()
+
         left_truncated, right_truncated = self._truncate_context(left, right)
 
         return [[line_id, left_truncated, self._hide_word(word), right_truncated]]
 
     def _get_random_line_id(self):
         """Select a random id (line_id) from the table"""
-        row_count_query = self._session.query(func.count(self._id_obj))
-        row_count = row_count_query.scalar()
+
+        with self._engine.connect() as conn:
+            row_count = conn.execute(select(func.count(self._id_obj))).scalar_one()
+
         random_line_id = randrange(row_count) + 1
 
         return random_line_id
 
     def select_random_word(self):
         """Select one random word from all available lines
-            Raises sqlalchemy.orm.exc.NoResultFound if the query selects no rows
-            Raises sqlalchemy.orm.exc.MultipleResultsFound if multiple rows are returned
+            Raises sqlalchemy.exc.NoResultFound if the query selects no rows
+            Raises sqlalchemy.exc.MultipleResultsFound if multiple rows are returned
         """
 
         random_line_id = self._get_random_line_id()
@@ -122,14 +125,12 @@ class ContextBank:
 
     def identify_word_from_id(self, one_line_id):
         """Identify word from (one of the the already shown) line ID
-            Raises sqlalchemy.orm.exc.NoResultFound if the query selects no rows
-            Raises sqlalchemy.orm.exc.MultipleResultsFound if multiple rows are returned
+            Raises sqlalchemy.exc.NoResultFound if the query selects no rows
+            Raises sqlalchemy.exc.MultipleResultsFound if multiple rows are returned
         """
 
-        word_query = self._session.query(self._table_obj). \
-            with_entities(self._word_obj, self._freq). \
-            filter(self._id_obj == one_line_id)
-        word, freq = word_query.one()
+        with self._engine.connect() as conn:
+            word, freq = conn.execute(select(self._word_obj, self._freq).where(self._id_obj == one_line_id)).one()
 
         return word, freq
 

@@ -7,7 +7,6 @@ from pathlib import Path
 from logging.config import dictConfig
 
 from yaml import safe_load as yaml_load
-from flask_sqlalchemy import SQLAlchemy
 from yamale import make_schema, make_data, validate, YamaleError
 from flask import request, flash, session, Flask, render_template, current_app
 
@@ -69,23 +68,18 @@ def create_app(config_filename=Path('config.yaml')):
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
 
-    db_name = str(Path(config['db_config']['database_name']).resolve())
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
-                                  SQLALCHEMY_DATABASE_URI=f'sqlite:///{db_name}',  # SQLite 2.0 needs abspath here
-                                  SQLALCHEMY_TRACK_MODIFICATIONS=False,
                                   # JSONIFY_PRETTYPRINT_REGULAR=True,
                                   # JSON_AS_ASCII=False,
                                   )
     app_settings = flask_app.config['APP_SETTINGS']
 
-    # Setup SQLAlchemy database for pythonic usage (column obj to name mapping)
-    db = SQLAlchemy(flask_app)
     with flask_app.app_context():
         left_size = config['contextbank_config']['left_size']
         right_size = config['contextbank_config']['right_size']
         hide_char = config['contextbank_config']['hide_char']
-        app_settings['context_bank'] = ContextBank(config['db_config'], db, left_size, right_size, hide_char)
+        app_settings['context_bank'] = ContextBank(config['db_config'], left_size, right_size, hide_char)
 
     @flask_app.route('/')  # So one can create permalink for states!
     # @auth.login_required
