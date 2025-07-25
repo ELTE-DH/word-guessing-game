@@ -64,13 +64,13 @@ class ContextBank:
             with_entities(self._id_obj, self._left_obj, self._word_obj, self._right_obj). \
             filter(self._word_obj == word)
         for line_id, left, word, right in all_lines_for_word_query.all():
-            word = hide_fun(word)
+            word_hidden = hide_fun(word)
             left_truncated, right_truncated = self._truncate_context(left, right)
 
             if line_id in displayed_lines_set:
-                lines_to_display[line_id] = [line_id, left_truncated, word, right_truncated]
+                lines_to_display[line_id] = [line_id, left_truncated, word_hidden, right_truncated]
             else:
-                new_lines.append([line_id, left_truncated, word, right_truncated])
+                new_lines.append([line_id, left_truncated, word_hidden, right_truncated])
 
         lines_to_display = [lines_to_display[line_id] for line_id in displayed_lines]  # In the original order!
         shuffle(new_lines)

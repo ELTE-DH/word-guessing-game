@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-import os
 import sys
 from uuid import uuid4
 from pathlib import Path
@@ -16,9 +15,8 @@ from context_bank import ContextBank
 from guesser_helper import word_similarity, dummy_similarity_fun, guess
 
 
-def load_and_validate_config(config_filename=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.yaml'),
-                             config_schema_filename=os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                                                 'config_schema.yaml')):
+def load_and_validate_config(config_filename=Path(__file__).resolve().parent / 'confg.yaml',
+                             config_schema_filename=Path(__file__).resolve().parent / 'config_schema.yaml'):
     """Load YAML config and validate it with the given schema"""
 
     # Load Schema
@@ -57,7 +55,7 @@ def validate_config_special(config):
         raise ValueError('Both or none of guesser_config/guesser_baseurl and guesser_config/guesser_name must be null!')
 
 
-def create_app(config_filename='config.yaml'):
+def create_app(config_filename=Path('config.yaml')):
     """Create and configure the app (and avoid globals as possible)"""
 
     # Read configuration
@@ -71,7 +69,7 @@ def create_app(config_filename='config.yaml'):
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
 
-    db_name = str(Path(config["db_config"]["database_name"]).resolve())
+    db_name = str(Path(config['db_config']['database_name']).resolve())
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
                                   SQLALCHEMY_DATABASE_URI=f'sqlite:///{db_name}',  # SQLite 2.0 needs abspath here
