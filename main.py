@@ -5,6 +5,7 @@ import re
 import sys
 from uuid import uuid4
 from pathlib import Path
+from datetime import timedelta
 from logging.config import dictConfig
 
 from yaml import safe_load as yaml_load
@@ -71,6 +72,8 @@ def create_app(config_filename=Path('config.yaml')):
 
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
+                                  PERMANENT_SESSION_LIFETIME=timedelta(days=31),
+                                  SESSION_REFRESH_EACH_REQUEST=True,
                                   # JSONIFY_PRETTYPRINT_REGULAR=True,
                                   # JSON_AS_ASCII=False,
                                   )
@@ -94,6 +97,8 @@ def create_app(config_filename=Path('config.yaml')):
         # Create random session id to identify users
         if 'id' not in session:
             session['id'] = uuid4()
+            session.permanent = True
+            app.permanent_session_lifetime = timedelta(days=31)
         # Log parameters and URL query string
         all_guesses = this_player[0][:]
         all_guesses.append(this_player[1])
@@ -180,7 +185,7 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
     elif action == 'guess':
         # Get the word for ID and check it. If matches reveal word in displayed lines
         word, regex = context_bank.identify_word_from_id(displayed_lines[0])  # Empty list is handled in parse_params()
-        if re.match(regex, guessed_word, flags=re.IGNORECASE):
+        if re.match(f'{regex}$', guessed_word, flags=re.IGNORECASE):
             hide_word = False
             messages.append(ui_strings['win'])
             buttons_enabled = {'guess': False, 'next_line': False, 'give_up': False, 'new_game': True}
@@ -211,7 +216,7 @@ def game_logic(messages, action, displayed_lines, this_player, other_player, gue
         lines_to_display, new_lines = context_bank.read_all_lines_for_word(None, displayed_lines, hide_word=True)
 
         # Select a new line to display and insert it to the top
-        if len(new_lines) > 0 and len(lines_to_display) < 5:
+        if len(new_lines) > 0 and len(lines_to_display) < 10:
             lines_to_display.insert(0, new_lines[0])
         else:
             buttons_enabled['next_line'] = False

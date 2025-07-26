@@ -5,8 +5,8 @@ from sqlalchemy import create_engine, MetaData, Table, Column, String, insert, I
 
 
 # File and DB config
-tsv_path = Path('minden_példa.txt')
-sqlite_path = Path('output.db')
+tsv_path = Path('examples.tsv')
+sqlite_path = Path('human_measurement2.db')
 
 # Step 1: Read header and rows from TSV
 with tsv_path.open(encoding='UTF-8') as f:

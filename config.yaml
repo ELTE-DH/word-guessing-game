@@ -1,5 +1,5 @@
 db_config:
-    database_name: output.db
+    database_name: human_measurement2.db
     table_name: lines
     id_name: id
     left_name: left
@@ -38,12 +38,4 @@ ui_strings:
     error: Hiba történt
     description: Részletek
     ok: Rendben
-    footer: <p>Találd ki a szót minél kevesebb sorból! Az X karakterek ugyanazt a szót rejtik más-más mondatokból vett kontextusokkal. (Az X karakterek száma megegyezik a kitalálandó szó karaktereinek számával.) A helytelen szavak melletti szám az aktuális és a keresett szó hasonlóságát mutatja 1 és -1 között, ismeretlen szó esetén "nan" értékkel (Word2Vec most_similar() függvényének kimenete).</p>
-            <br>
-            <p>Az oldal alatt futó kód a <em>Nyelvi játék © MorphoLogic, 2000</em> működése alapján készült, független kódbázissal.</p>
-            <p>Adatbázis:\ Kornai András et al. – <a href="http://mokk.bme.hu/resources/webcorpus/">Magyar Webkorpusz</a></p>
-            <p>A Magyar Webkorpusz felhasználása esetén az alábbi publikációk legalább egyike hivatkozandó:</p>
-            <ul>
-                <li><a href="https://aclanthology.org/W06-1701/">András Kornai, Péter Halácsy, Viktor Nagy, Csaba Oravecz, Viktor Trón, and Dániel Varga. 2006. Web-based frequency dictionaries for medium density languages. In Proceedings of the 2nd International Workshop on Web as Corpus.</a></li>
-                <li><a href="https://aclanthology.org/L04-1320/">Péter Halácsy, András Kornai, László Németh, András Rung, István Szakadát, and Viktor Trón. 2004. Creating Open Language Resources for Hungarian. In Proceedings of the Fourth International Conference on Language Resources and Evaluation (LREC’04), Lisbon, Portugal. European Language Resources Association (ELRA).</a></li>
-            </ul>
+    footer: <p>Kedves Játékos!<br>Az alábbi nyelvi játék célja annak vizsgálata, hogy hogyan használják az emberek a magyar nyelvet. A játék során olyan értelmes mondatokat fogsz látni, amelyekben egy szót eltakartunk. A feladatod, hogy kitaláld a kitakart szót minél kevesebb mondatból. Tippelhetsz korlátlanul.  Ha éppen nincs ötleted a megoldásra, kérhetsz újabb mondatot. Az egymás alatti _ karakterek ugyanazt a kifejezést rejtik más-más mondatokból vett környezetekkel. Összesen tízszer kérhetsz új mondatot. Ha elfogytak a tippjeid és már új sort sem tudsz kérni, a "Szabad a gazda" gombra kattintva megmutatjuk a megoldást.<br>Ha szeretnél pihenőt tartani, vagy később folytatnád a már elkezdett játékot, mentsd el a linket (URL), és használd újra, amikor szeretnél játszani! Kérjük, csak akkor mentsd el a linket és hagyd abba a játékot, ha sikerült kitalálnod a szót, vagy feladtad a játékot.<br>Jó szórakozást kívánunk! :)</p>

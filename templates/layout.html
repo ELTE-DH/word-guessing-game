@@ -67,9 +67,9 @@
                         <tbody>
                             {%- for line_id, left, word, right in displayed_lines %}
                             <tr>
-                                <td style="border-width:0px; text-align: right;">...{{ left }}</td>
+                                <td style="border-width:0px; text-align: right;">{{ left }}</td>
                                 <td style="border-width:0px; text-align: center;"> <strong>{{ word }}</strong> </td>
-                                <td style="border-width:0px; text-align: left;">{{ right }}...</td>
+                                <td style="border-width:0px; text-align: left;">{{ right }}</td>
                             </tr>
                             {%- endfor %}
                         </tbody>
