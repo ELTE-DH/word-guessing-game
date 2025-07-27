@@ -10,7 +10,7 @@ sqlite_path = Path('human_measurement2.db')
 
 # Step 1: Read header and rows from TSV
 with tsv_path.open(encoding='UTF-8') as f:
-    reader = csv.DictReader(f, delimiter='\t')
+    reader = csv.DictReader(f, delimiter='\t', quotechar=None, quoting=csv.QUOTE_NONE)
     rows = list(reader)
     headers = list(reader.fieldnames)
 
