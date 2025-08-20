@@ -85,23 +85,29 @@ class ContextBank:
         right_truncated = ' '.join(right_split[:min(self._right_size, len(right_split))])
         return left_truncated, right_truncated
 
-    def select_one_random_line(self):
+    def select_one_random_line(self, line_id=None, hide_word=True):
         """Select one random line from all available lines
             Raises sqlalchemy.exc.NoResultFound if the query selects no rows
             Raises sqlalchemy.exc.MultipleResultsFound if multiple rows are returned
         """
 
-        random_line_id = self._get_random_line_id()
+        if line_id is None:
+            line_id = self._get_random_line_id()
+
+        if hide_word:
+            hide_fun = self._hide_word
+        else:
+            hide_fun = self._identity
 
         # Retrieve data for that specific line
         with self._engine.connect() as conn:
             entry_query = conn.execute(select(self._id_obj, self._left_obj, self._word_obj, self._right_obj).
-                                       where(self._id_obj == random_line_id))
+                                       where(self._id_obj == line_id))
             line_id, left, word, right = entry_query.one()
 
         left_truncated, right_truncated = self._truncate_context(left, right)
 
-        return [[line_id, left_truncated, self._hide_word(word), right_truncated]]
+        return [[line_id, left_truncated, hide_fun(word), right_truncated]]
 
     def _get_random_line_id(self):
         """Select a random id (line_id) from the table"""

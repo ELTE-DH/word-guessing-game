@@ -2,9 +2,12 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 import sys
+import json
 from uuid import uuid4
 from pathlib import Path
+from logging import Formatter
 from logging.config import dictConfig
+from datetime import datetime, timedelta
 
 from yaml import safe_load as yaml_load
 from yamale import make_schema, make_data, validate, YamaleError
@@ -14,7 +17,16 @@ from context_bank import ContextBank
 from guesser_helper import word_similarity, dummy_similarity_fun, guess
 
 
-def load_and_validate_config(config_filename=Path(__file__).resolve().parent / 'confg.yaml',
+class ISOFormatter(Formatter):
+    """ Fix logging non-ISO date formatting
+    Original source:
+    https://stackoverflow.com/questions/50873446/python-logger-output-dates-in-is8601-format/77821755#77821755"""
+    def formatTime(self, record, datefmt=None):
+        dt = datetime.fromtimestamp(record.created)
+        return dt.strftime(datefmt or "%Y-%m-%dT%H:%M:%S.%f")
+
+
+def load_and_validate_config(config_filename=Path(__file__).resolve().parent / 'config.yaml',
                              config_schema_filename=Path(__file__).resolve().parent / 'config_schema.yaml'):
     """Load YAML config and validate it with the given schema"""
 
@@ -63,13 +75,20 @@ def create_app(config_filename=Path('config.yaml')):
 
     # Read logging configuration
     with open('logging.cfg') as fh:
-        dictConfig(yaml_load(fh))
+        # Unescape backslash escapes in formatters
+        logging_config = yaml_load(fh)
+        for fmt in logging_config.get('formatters', {}).values():
+            if 'format' in fmt:
+                fmt['format'] = fmt['format'].encode('UTF-8').decode('unicode_escape')
+        dictConfig(logging_config)
 
     # Setup Flask application
     flask_app = Flask('word-guessing-game')
 
     flask_app.config.from_mapping(APP_SETTINGS=config,
                                   SECRET_KEY='any random string',
+                                  PERMANENT_SESSION_LIFETIME=timedelta(days=31),
+                                  SESSION_REFRESH_EACH_REQUEST=True,
                                   # JSONIFY_PRETTYPRINT_REGULAR=True,
                                   # JSON_AS_ASCII=False,
                                   )
@@ -93,12 +112,14 @@ def create_app(config_filename=Path('config.yaml')):
         # Create random session id to identify users
         if 'id' not in session:
             session['id'] = uuid4()
+            session.permanent = True
+            app.permanent_session_lifetime = timedelta(days=31)
         # Log parameters and URL query string
         all_guesses = this_player[0][:]
         all_guesses.append(this_player[1])
         current_app.logger.info(
-            '\t'.join(map(str, (session['id'], next_action, displayed_line_ids, all_guesses,
-                                request.query_string.decode()))))
+            '\t'.join((str(session['id']), str(next_action), json.dumps(displayed_line_ids, ensure_ascii=False),
+                       json.dumps(all_guesses, ensure_ascii=False), request.full_path)))
 
         # Execute one step in the game if there were no errors, else do nothing
         messages, displayed_lines, buttons_enabled, prev_guesses_this, prev_guesses_other, other_guess_state = \
