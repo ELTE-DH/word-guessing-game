@@ -30,11 +30,16 @@ The required minimum Python version is 3.6.
 
 This project is licensed under the terms of the GNU LGPL 3.0 license.
 
-# Acknowledgement
+# Acknowledgements
 
 The authors gratefully acknowledge the groundbreaking work of all pioneers who inspired this program. <br>
 We wish to thank to the employees of _MorphoLogic Kft._ who created this program. <br>
 We also thank to the publishers of both Webcorpus versions for making their corpus publicly available.
+
+The authors acknowledge the support of the National Laboratory for Digital Heritage.
+Project no. 2022-2.1.1-NL-2022-00009 has been implemented with the support provided by
+the Ministry of Culture and Innovation of Hungary from the National Research, Development
+and Innovation Fund, financed under the 2022-2.1.1-NL funding scheme.
 
 # References
 
